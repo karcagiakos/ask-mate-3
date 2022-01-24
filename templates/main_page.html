@@ -1,0 +1,34 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+
+Valami mas
+{% endblock title %}
+
+
+ {% block content %}
+
+<h1>BUZZSAWS Q/A</h1>
+     <h2>szia ákos ez egy teszt</h2>
+     <p> volt egyszer egy ember<br>
+     szakálla volt kender</p>
+
+
+     <table>
+     <tr>
+    {% for key in data[0].keys() %}
+     <th>{{ key.capitalize() }}</th>
+     {% endfor  %}
+     </tr>
+     <tr>
+    {% for dicts in data %}
+    </tr>
+     {% for key, value in dicts.items() %}
+        <td>{{ value }}</td>
+
+
+    {% endfor  %}
+    {% endfor  %}
+
+     </table>
+    {% endblock content %}
