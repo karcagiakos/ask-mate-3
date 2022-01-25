@@ -2,7 +2,8 @@
 
 {% block head %}
 
-Valami mas
+<title>AskMate project</title>
+
 {% endblock head %}
 
 
@@ -10,23 +11,29 @@ Valami mas
 
 <h1>BUZZSAWS Q/A</h1>
      <h2>szia ákos ez egy teszt</h2>
-     <p> volt egyszer egy ember<br>
-     szakálla volt kender</p>
+     <p> volt egyszer egy ember hihi<br>
+     szakálla volt kender</p><br>
+    <button  class="button button2" onclick="location.href='/add_question'" type="button">
+         Add a new question</button><br>
 
-    <a href="/add_question">Add a new question</a>
+   <!--  <a href="/add_question">Add a new question</a> -->
 
      <table>
-     <tr style="width:50%">
+     <tr>
     {% for key in data[0].keys() %}
      <th>
          {{ key.capitalize() }}</th>
      {% endfor  %}
      </tr>
      <tr>
-    {% for dicts in data %}
+    {% for dicts in data|sort (attribute='submisson_time') %}
     </tr>
      {% for key, value in dicts.items() %}
-        <td>{{ value }}</td>
+      {% if key == 'title' %}
+          <td><a id="{{ dicts['id'] }}" href="/questions/{{ dicts['id'] }}">{{ value }}</a></td>
+         {% else %}
+            <td>{{ value }}</td>
+         {% endif %}
 
 
     {% endfor  %}

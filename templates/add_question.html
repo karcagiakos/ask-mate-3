@@ -7,8 +7,11 @@
 
 {% block body %}
 <h1>Add a new question</h1>
-
-<form action=""
-
+<form action="/add_question", method="post" >
+  <!--<label for="question">Question:</label> -->
+    <input name="title" value="title"> <br>
+    <textarea id="question" name="message" rows="30" cols="30" >Text here</textarea> <br>
+    <button class="button button1">Submit</button>
+</form>
 
 {% endblock body %}

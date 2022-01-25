@@ -1,8 +1,31 @@
 {% extends 'layout.html' %}
 {% block head %}
-    Buzzsaws főoldal
+
+    <h1>Title: {{ question[0] }}</h1>
+    <h1>Message: {{ question[1] }}</h1>
 {% endblock head %}
     {% block body %}
-        <h1> Főoldal </h1>
+        <button  class="button button1" onclick="location.href='/list'" type="button">
+         Back to the list</button><br>
+        <table width="100%">
+    <tr>
+    {% if answer|length < 1 %}
+        <h3>There are no answers yet.</h3>
+    {% else %}
+    {% for key in answer[0].keys() %}
+     <th>
+         {{ key.capitalize() }}</th>
+     {% endfor  %}
+     </tr>
+            {% for dicts in answer %}
+    </tr>
+     {% for key, value in dicts.items() %}
+        <td>{{  value }}</td>
+{% endfor  %}
+        {% endfor  %}
+        {% endif %}
+       </table>
+        <button  class="button button2" onclick="location.href='/question/id/new-answer'" type="button">
+         Add a new answer</button><br>
     {% endblock body %}
 
