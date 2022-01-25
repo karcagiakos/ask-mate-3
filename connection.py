@@ -2,7 +2,9 @@ import csv
 
 
 def read_questions():
-    data = list(csv.DictReader(open('sample_data/question.csv')))
-    return data
+    questions = sorted(list(csv.DictReader(open('sample_data/question.csv'))), key= lambda x: x['submission_time'], reverse = True)
+    return questions
 
-
+def read_answers():
+    answers = list(csv.DictReader(open('sample_data/answer.csv')))
+    return answers

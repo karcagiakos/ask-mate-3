@@ -1,14 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <style>
+    table, th, td {
+    border: 1px solid black;
+    text-align: center;
+    }
+    th { style="width: 50%"
+    }
+    </style>
     <meta charset="UTF-8">
-    <title>{% block title %}{% endblock title %}</title>
+    {% block head %}
+    {% endblock head %}
 </head>
 <body>
-    {% block oldalcime %}
-    {% endblock oldalcime %}
-    {% block content %}
-    {% endblock content %}
+    {% block body %}
+    {% endblock body %}
 
 
 </body>

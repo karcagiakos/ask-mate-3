@@ -1,23 +1,25 @@
 {% extends 'layout.html' %}
 
-{% block title %}
+{% block head %}
 
 Valami mas
-{% endblock title %}
+{% endblock head %}
 
 
- {% block content %}
+ {% block body %}
 
 <h1>BUZZSAWS Q/A</h1>
      <h2>szia ákos ez egy teszt</h2>
      <p> volt egyszer egy ember<br>
      szakálla volt kender</p>
 
+    <a href="/add_question">Add a new question</a>
 
      <table>
-     <tr>
+     <tr style="width:50%">
     {% for key in data[0].keys() %}
-     <th>{{ key.capitalize() }}</th>
+     <th>
+         {{ key.capitalize() }}</th>
      {% endfor  %}
      </tr>
      <tr>
@@ -31,4 +33,4 @@ Valami mas
     {% endfor  %}
 
      </table>
-    {% endblock content %}
+    {% endblock body %}
