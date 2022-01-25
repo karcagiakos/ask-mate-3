@@ -1,0 +1,16 @@
+{% extends 'layout.html' %}
+
+
+{% block head %}
+<h1> new answer</h1>
+{% endblock head %}
+
+
+{% block body %}
+<form action="{{url_for('get_new_answers', id=id)}}" , method="post">
+    <!--<label for="question">Question:</label> -->
+    <textarea rows="10" cols="20" name="message">New answer here
+</textarea> <br>
+    <button class="button button1" type="submit">Submit</button>
+</form>
+{% endblock body %}

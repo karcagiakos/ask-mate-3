@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, request
+from flask import Flask, render_template, redirect, request, url_for
 import connection
 import datetime
 import time
@@ -29,8 +29,23 @@ def get_answers(id):
     for dicts in answers:
         if int(dicts['question_id']) == int(id):
             answer.append(dicts)
-    return render_template('index.html', id=id, questions=questions, answers=answers, question=question, answer=answer)
+    return render_template('display_questions.html', id=id, questions=questions, answers=answers, question=question, answer=answer)
 
+@app.route("/questions/<int:id>/new-answer", methods=['GET', 'POST'])
+def get_new_answers(id):
+    saved_data = {}
+    if request.method == 'POST':
+        x = request.form.to_dict()
+        print(x)
+        return redirect('/list')
+        # saved_data['id'] = id
+        # saved_data['submission_time'] = int(time.time())
+        #  saved_data['vote_number'] =
+        # saved_data['question_id'] = id
+        # saved_data['message'] =
+        # saved_data['image']
+
+    return render_template('new_answer.html', id=id)
 
 
 @app.route("/add_question", methods=['GET', 'POST'])
@@ -45,9 +60,7 @@ def add_question():
         saved_data['title'] = request.form['title']
         saved_data['message'] = request.form['message']
         saved_data['image'] = 0
-        print(saved_data)
         questions.append(saved_data)
-        print(questions)
         connection.write_questions(questions)
         return redirect('/list')
     return render_template('add_question.html')
@@ -55,7 +68,7 @@ def add_question():
 
 if __name__ == "__main__":
     app.run(
-        host = "192.168.1.100",
+        #host = "192.168.1.100",
         debug = True,
         port = 2000
     )

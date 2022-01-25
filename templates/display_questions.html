@@ -25,7 +25,8 @@
         {% endfor  %}
         {% endif %}
        </table>
-        <button  class="button button2" onclick="location.href='/question/id/new-answer'" type="button">
+        <button  class="button button2" onclick="location.href='{{url_for('get_new_answers', id=id)}}'" type="button">
          Add a new answer</button><br>
+
     {% endblock body %}
 
