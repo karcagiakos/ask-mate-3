@@ -28,8 +28,20 @@ def write_answer(data):
 
 def delete_question(id):
     questions = read_questions()
+    answers = read_answers()
     for dict in questions:
         if int(dict['id']) == int(id):
             questions.remove(dict)
             write_questions(questions)
+    new_answers = []
+    for dict in answers:
+        if int(dict['question_id']) != int(id):
+            new_answers.append(dict)
+    write_answer(new_answers)
 
+def delete_answer(answer_id):
+    answers = read_answers()
+    for dict in answers:
+        if int(dict['id']) == int(answer_id):
+            answers.remove(dict)
+    write_answer(answers)
