@@ -24,8 +24,8 @@
     <option name="submission_time" value="submission_time">submission_time</option>
       <option name="title" value="title">title</option>
       <option name="message" value="message">message</option>
-      <option name="number_of_views" value="number_of_views">number_of_views</option>
-      <option name="number_of_votes" value="number_of_votes">number_of_votes</option>
+      <option name="view_number" value="view_number">view_number</option>
+      <option name="vote_number" value="vote_number">vote_number</option>
     <input type="submit">
 </select>
 </form>
@@ -37,13 +37,13 @@
      {% endfor  %}
      </tr>
      <tr>
-    {% for dicts in data|sort (attribute='submisson_time') %}
+    {% for dicts in data%}
     </tr>
      {% for key, value in dicts.items() %}
       {% if key == 'title' %}
-          <td><a id="{{ dicts['id'] }}" href="/questions/{{ dicts['id'] }}">{{ value }}</a></td>
+          <td><a id="{{ dicts['id'] }}" href="/questions/{{ dicts['id'] }}">{{ value.capitalize() }}</a></td>
          {% else %}
-            <td>{{ value}}</td>
+            <td>{{ value.capitalize() }}</td>
          {% endif %}
 
 

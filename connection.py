@@ -26,5 +26,10 @@ def write_answer(data):
             writer.writerow(dicts)
 
 
-
+def delete_question(id):
+    questions = read_questions()
+    for dict in questions:
+        if int(dict['id']) == int(id):
+            questions.remove(dict)
+            write_questions(questions)
 

@@ -11,9 +11,13 @@ app = Flask(__name__)
 def main():
     data = connection.read_questions()
     if request.method == 'POST':
-        data = sorted(data, key=lambda x: x[request.form[options['name']]])
-        connection.write_questions(data)
-        return redirect('/list')
+        ordering_by = request.form['headers']
+        if ordering_by == 'view_number' or ordering_by == 'vote_number':
+            data = sorted(data, key=lambda x: int(x[ordering_by]))
+        # connection.write_questions(data)
+        else:
+            data = sorted(data, key=lambda x: x[ordering_by].capitalize())
+        return render_template('main_page.html', data=data)
     return render_template('main_page.html', data=data)
 
 
@@ -22,13 +26,15 @@ def list_questions(sort_by='submission_time'):
     data = connection.read_questions()
     if request.method == 'POST':
         ordering_by = request.form['headers']
-
-        # data = sorted(data, key=lambda x: x[request.form[option['name']]])
+        if ordering_by == 'view_number' or ordering_by == 'vote_number':
+           data = sorted(data, key=lambda x: int(x[ordering_by]))
         # connection.write_questions(data)
-        return redirect('/list')
+        else:
+            data = sorted(data, key=lambda x: x[ordering_by].capitalize())
+        return render_template('main_page.html', data=data)
     return render_template('main_page.html', data=data)
 
-@app.route("/questions/<int:id>")
+@app.route("/questions/<int:id>", methods=['GET', 'DELETE', 'POST'])
 def get_answers(id):
     questions = connection.read_questions()
     question = []
@@ -47,11 +53,12 @@ def get_answers(id):
 def get_new_answers(id):
     saved_data = {}
     answers = connection.read_answers()
+    last_id = sorted(answers, key=lambda x: int(x['id']), reverse=True)[0]['id']
     if request.method == 'POST':
         # x = request.form.to_dict()
         # print(x)
         # return redirect(url_for('get_answers')
-        saved_data['id'] = len(answers) + 1
+        saved_data['id'] = int(last_id) + 1
         saved_data['submission_time'] = int(time.time())
         saved_data['vote_number'] = 0
         saved_data['question_id'] = id
@@ -67,8 +74,9 @@ def get_new_answers(id):
 def add_question():
     saved_data = {}
     questions = connection.read_questions()
+    last_id = sorted(questions, key=lambda x: int(x['id']), reverse=True)[0]['id']
     if request.method == "POST":
-        saved_data['id'] = len(questions) + 1
+        saved_data['id'] = int(last_id) + 1
         saved_data['submission_time'] = int(time.time())
         saved_data['view_number'] = 0
         saved_data['vote_number'] = 0
@@ -80,6 +88,11 @@ def add_question():
         return redirect('/list')
     return render_template('add_question.html')
 
+
+@app.route('/question/<question_id>/delete')
+def delete_question(question_id):
+    connection.delete_question(question_id)
+    return redirect('/list')
 
 if __name__ == "__main__":
     app.run(
