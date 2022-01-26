@@ -7,6 +7,7 @@ app = Flask(__name__)
 
 
 
+
 @app.route("/", methods=['GET', 'POST'])
 def main():
     data = connection.read_questions()
@@ -47,7 +48,8 @@ def get_answers(id):
     for dicts in answers:
         if int(dicts['question_id']) == int(id):
             answer.append(dicts)
-    return render_template('display_questions.html', id=id, questions=questions, answers=answers, question=question, answer=answer)
+    return render_template('display_questions.html', id=id,
+                           questions=questions, answers=answers, question=question, answer=answer)
 
 @app.route("/questions/<int:id>/new-answer", methods=['GET', 'POST'])
 def get_new_answers(id):
@@ -88,11 +90,32 @@ def add_question():
         return redirect('/list')
     return render_template('add_question.html')
 
+@app.route('/question/<question_id>/edit ', methods=['GET', 'POST'])
+def edit_question(question_id):
+    pass
+
+
 
 @app.route('/question/<question_id>/delete')
 def delete_question(question_id):
     connection.delete_question(question_id)
     return redirect('/list')
+
+
+@app.route('/answer/<int:answer_id>', methods=['GET', 'POST'])
+def display_answer(answer_id):
+    answers = connection.read_answers()
+    answer = ''
+    for dict in answers:
+        if int(dict['id']) == int(answer_id):
+            answer += dict['message']
+    return render_template('display_answer.html', answer_id=answer_id, answer=answer )
+
+@app.route('/answer/<answer_id>/delete ')
+def delete_answer(answer_id):
+    connection.delete_answer(answer_id)
+    return redirect('/questions/<int:id>')
+
 
 if __name__ == "__main__":
     app.run(

@@ -9,9 +9,11 @@
 <h1>Add a new question</h1>
 <form action="/add_question", method="post" >
   <!--<label for="question">Question:</label> -->
-    <input name="title" value="title"> <br>
-    <textarea id="question" name="message" rows="30" cols="30" >Text here</textarea> <br>
+    <input name="title" value={{ title if title else 'title'}}> <br>
+    <textarea id="question" name="message" rows="30" cols="30" >{{ message if message else 'Text here' }}</textarea> <br>
     <button class="button button1">Submit</button>
 </form>
 
+<button  class="button button1" onclick="location.href='/list'" type="button">
+         Back to the list</button><br>
 {% endblock body %}

@@ -20,8 +20,13 @@
             {% for dicts in answer %}
     </tr>
      {% for key, value in dicts.items() %}
-        <td>{{  value }}</td>
-{% endfor  %}
+            {% if key == 'message' %}
+            <td><a id="{{ dicts['id'] }}" href="{{url_for('display_answer', answer_id=id)}}">{{ value.capitalize() }}</a></td>
+        {% else %}
+        <td>{{  value }} </td>
+
+            {% endif %}
+            {% endfor  %}
         {% endfor  %}
         {% endif %}
        </table>
@@ -30,6 +35,7 @@
 <form  name="delete_question" method="post">
     <button  class="button button2" onclick="location.href='{{ url_for('delete_question', question_id=id) }}'" type="button">
          Delete Question</button><br>
+
 </form>
     {% endblock body %}
 
