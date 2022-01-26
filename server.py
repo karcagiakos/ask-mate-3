@@ -45,7 +45,6 @@ def list_questions(sort_by='submission_time'):
 @app.route("/questions/<int:id>", methods=['GET', 'DELETE', 'POST'])
 def get_answers(id):
     questions = connection.read_questions()
-    answer_id = []
     question = []
     answer = []
     answers = connection.read_answers()
@@ -56,9 +55,7 @@ def get_answers(id):
     for dicts in answers:
         if int(dicts['question_id']) == int(id):
             answer.append(dicts)
-            answer_id.append(dicts['id'])
-    return render_template('display_questions.html', id=id,
-                           questions=questions, answers=answers, question=question, answer=answer, answer_id=answer_id)
+    return render_template('display_questions.html', id=id,questions=questions, answers=answers, question=question, answer=answer)
 
 @app.route("/questions/<int:id>/new-answer", methods=['GET', 'POST'])
 def get_new_answers(id):
@@ -118,6 +115,7 @@ def display_answer(answer_id):
     for dict in answers:
         if int(dict['id']) == int(answer_id):
             answer += dict['message']
+
     return render_template('display_answer.html', answer_id=answer_id, answer=answer )
 
 @app.route('/answer/<answer_id>/delete ')

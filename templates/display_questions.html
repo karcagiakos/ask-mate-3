@@ -21,7 +21,7 @@
     </tr>
      {% for key, value in dicts.items() %}
             {% if key == 'message' %}
-            <td><a  href="{{url_for('display_answer', answer_id=answer_id)}}">{{ value.capitalize() }}</a></td>
+            <td><a  href="{{url_for('display_answer', answer_id=dicts['id'])}}">{{ value.capitalize() }}</a></td>
         {% else %}
         <td>{{  value }} </td>
 
