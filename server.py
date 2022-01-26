@@ -26,18 +26,26 @@ def main():
 def list_questions(sort_by='submission_time'):
     data = connection.read_questions()
     if request.method == 'POST':
-        ordering_by = request.form['headers']
-        if ordering_by == 'view_number' or ordering_by == 'vote_number':
-           data = sorted(data, key=lambda x: int(x[ordering_by]))
+        ordering_by = request.form['headers'][:-1]
+        if request.form['headers'][-1] == '+':
+            if ordering_by == 'view_number' or ordering_by == 'vote_number':
+                data = sorted(data, key=lambda x: int(x[ordering_by]))
         # connection.write_questions(data)
+            else:
+                data = sorted(data, key=lambda x: x[ordering_by].capitalize())
         else:
-            data = sorted(data, key=lambda x: x[ordering_by].capitalize())
+            if ordering_by == 'view_number' or ordering_by == 'vote_number':
+                data = sorted(data, key=lambda x: int(x[ordering_by]))[::-1]
+            # connection.write_questions(data)
+            else:
+                data = sorted(data, key=lambda x: x[ordering_by].capitalize())[::-1]
         return render_template('main_page.html', data=data)
     return render_template('main_page.html', data=data)
 
 @app.route("/questions/<int:id>", methods=['GET', 'DELETE', 'POST'])
 def get_answers(id):
     questions = connection.read_questions()
+    answer_id = []
     question = []
     answer = []
     answers = connection.read_answers()
@@ -48,8 +56,9 @@ def get_answers(id):
     for dicts in answers:
         if int(dicts['question_id']) == int(id):
             answer.append(dicts)
+            answer_id.append(dicts['id'])
     return render_template('display_questions.html', id=id,
-                           questions=questions, answers=answers, question=question, answer=answer)
+                           questions=questions, answers=answers, question=question, answer=answer, answer_id=answer_id)
 
 @app.route("/questions/<int:id>/new-answer", methods=['GET', 'POST'])
 def get_new_answers(id):
@@ -121,5 +130,5 @@ if __name__ == "__main__":
     app.run(
         #host = "192.168.1.100",
         debug = True,
-        port = 2000
+        port = 3000
     )
