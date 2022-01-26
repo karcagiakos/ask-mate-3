@@ -42,13 +42,18 @@
      {% for key, value in dicts.items() %}
       {% if key == 'title' %}
           <td><a id="{{ dicts['id'] }}" href="/questions/{{ dicts['id'] }}">{{ value.capitalize() }}</a></td>
-         {% else %}
+      {% elif key == 'image' %}
+            {% if value != '0' %}
+            <td><a id="{{ dicts['id'] }}" href="/static/images/{{ dicts['image'] }}"><img src="/static/images/{{ dicts['image'] }}" height="30"></a></td>
+         {% endif %}
+            {% else %}
             <td>{{ value.capitalize() }}</td>
          {% endif %}
 
 
-    {% endfor  %}
-    {% endfor  %}
+            {% endfor  %}
+            {% endfor  %}
 
-     </table>
-    {% endblock body %}
+        </table>
+
+{% endblock body %}
