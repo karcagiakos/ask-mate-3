@@ -17,7 +17,14 @@ def write_questions(data):
         for dicts in data:
             writer.writerow(dicts)
 
-def write_answer():
-    pass
+def write_answer(data):
+    with open('sample_data/answer.csv', 'w') as file:
+        fieldnames = ['id', 'submission_time', 'vote_number', 'question_id', 'message', 'image']
+        writer = csv.DictWriter(file, fieldnames=fieldnames)
+        writer.writeheader()
+        for dicts in data:
+            writer.writerow(dicts)
+
+
 
 

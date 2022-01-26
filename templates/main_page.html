@@ -18,7 +18,18 @@
 
    <!--  <a href="/add_question">Add a new question</a> -->
 
-     <table>
+<form action="/list" method="post">
+<label for="sorter">Choose how to sort</label>
+<select name="headers" id="sorter">
+    <option name="submission_time" value="submission_time">submission_time</option>
+      <option name="title" value="title">title</option>
+      <option name="message" value="message">message</option>
+      <option name="number_of_views" value="number_of_views">number_of_views</option>
+      <option name="number_of_votes" value="number_of_votes">number_of_votes</option>
+    <input type="submit">
+</select>
+</form>
+        <table>
      <tr>
     {% for key in data[0].keys() %}
      <th>
@@ -32,7 +43,7 @@
       {% if key == 'title' %}
           <td><a id="{{ dicts['id'] }}" href="/questions/{{ dicts['id'] }}">{{ value }}</a></td>
          {% else %}
-            <td>{{ value }}</td>
+            <td>{{ value}}</td>
          {% endif %}
 
 

@@ -7,14 +7,26 @@ app = Flask(__name__)
 
 
 
-@app.route("/")
+@app.route("/", methods=['GET', 'POST'])
 def main():
-    return render_template('main_page.html', data=connection.read_questions())
+    data = connection.read_questions()
+    if request.method == 'POST':
+        data = sorted(data, key=lambda x: x[request.form[options['name']]])
+        connection.write_questions(data)
+        return redirect('/list')
+    return render_template('main_page.html', data=data)
 
 
-@app.route("/list")
-def list_questions():
-    return render_template('main_page.html', data=connection.read_questions())
+@app.route("/list", methods=['GET', 'POST'])
+def list_questions(sort_by='submission_time'):
+    data = connection.read_questions()
+    if request.method == 'POST':
+        ordering_by = request.form['headers']
+
+        # data = sorted(data, key=lambda x: x[request.form[option['name']]])
+        # connection.write_questions(data)
+        return redirect('/list')
+    return render_template('main_page.html', data=data)
 
 @app.route("/questions/<int:id>")
 def get_answers(id):
@@ -34,17 +46,20 @@ def get_answers(id):
 @app.route("/questions/<int:id>/new-answer", methods=['GET', 'POST'])
 def get_new_answers(id):
     saved_data = {}
+    answers = connection.read_answers()
     if request.method == 'POST':
-        x = request.form.to_dict()
-        print(x)
-        return redirect('/list')
-        # saved_data['id'] = id
-        # saved_data['submission_time'] = int(time.time())
-        #  saved_data['vote_number'] =
-        # saved_data['question_id'] = id
-        # saved_data['message'] =
-        # saved_data['image']
-
+        # x = request.form.to_dict()
+        # print(x)
+        # return redirect(url_for('get_answers')
+        saved_data['id'] = len(answers) + 1
+        saved_data['submission_time'] = int(time.time())
+        saved_data['vote_number'] = 0
+        saved_data['question_id'] = id
+        saved_data['message'] = request.form['answer']
+        saved_data['image'] = 0
+        answers.append(saved_data)
+        connection.write_answer(answers)
+        return redirect(url_for('get_answers', id=id))
     return render_template('new_answer.html', id=id)
 
 
