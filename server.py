@@ -45,7 +45,6 @@ def list_questions(sort_by='submission_time'):
 @app.route("/questions/<int:id>", methods=['GET', 'DELETE', 'POST'])
 def get_answers(id):
     questions = connection.read_questions()
-    # answer_id = []
     question = []
     answer = []
     answers = connection.read_answers()
@@ -56,9 +55,7 @@ def get_answers(id):
     for dicts in answers:
         if int(dicts['question_id']) == int(id):
             answer.append(dicts)
-            # answer_id.append(dicts['id'])
-    return render_template('display_questions.html', id=id,
-                           questions=questions, answers=answers, question=question, answer=answer,)
+    return render_template('display_questions.html', id=id,questions=questions, answers=answers, question=question, answer=answer)
 
 @app.route("/questions/<int:id>/new-answer", methods=['GET', 'POST'])
 def get_new_answers(id):
@@ -87,7 +84,6 @@ def add_question():
     questions = connection.read_questions()
     last_id = sorted(questions, key=lambda x: int(x['id']), reverse=True)[0]['id']
     if request.method == "POST":
-
         saved_data['id'] = int(last_id) + 1
         saved_data['submission_time'] = int(time.time())
         saved_data['view_number'] = 0
@@ -102,7 +98,7 @@ def add_question():
 
 @app.route('/question/<question_id>/edit ', methods=['GET', 'POST'])
 def edit_question(question_id):
-    return render_template('add_question.html',)
+    pass
 
 
 
@@ -119,6 +115,7 @@ def display_answer(answer_id):
     for dict in answers:
         if int(dict['id']) == int(answer_id):
             answer += dict['message']
+
     return render_template('display_answer.html', answer_id=answer_id, answer=answer )
 
 @app.route('/answer/<answer_id>/delete ')
