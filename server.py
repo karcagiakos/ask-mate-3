@@ -154,10 +154,23 @@ def vote_answer(answer_id):
     return render_template('display_answer.html', answer_id=answer_id)
 
 
-@app.route('/question/<question_id>/vote_up')
-@app.route('/question/<question_id>/vote_down')
-def vote_question():
-    pass
+@app.route('/question/<question_id>/vote_up', methods=['GET', 'POST'])
+@app.route('/question/<question_id>/vote_down', methods=['GET', 'POST'])
+def vote_question(question_id):
+    questions = connection.read_questions()
+    if request.method == 'POST':
+        for dict in questions:
+            if dict['id'] == question_id:
+                if request.form['option'] == 'UP':
+                    dict['vote_number'] = int(dict['vote_number']) + 1
+                    connection.write_questions(questions)
+                    return redirect('/list')
+                elif request.form['option'] == 'DOWN':
+                    dict['vote_number'] = int(dict['vote_number']) - 1
+                    connection.write_questions(questions)
+                    return redirect('/list')
+    return render_template('display_question.html', question_id=question_id)
+
 
 
 

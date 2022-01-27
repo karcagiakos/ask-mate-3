@@ -1,7 +1,16 @@
 {% extends 'layout.html' %}
 {% block head %}
 
-<h1 xmlns="http://www.w3.org/1999/html">Title: {{ question[0] }}</h1>
+
+<form name="option" action="{{url_for('vote_question', question_id=id)}}" method="post">
+    <input  name="option" type="submit" value="UP">
+     </form>
+           <h1>Title: {{ question[0] }}</h1>
+
+<form name="option" action="{{url_for('vote_question', question_id=id)}}" method="post">
+<input  name="option" type="submit" value="DOWN">
+         </form>
+
     <h1>Message: {{ question[1] }}</h1>
 {% endblock head %}
     {% block body %}
