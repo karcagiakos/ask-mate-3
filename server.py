@@ -98,7 +98,14 @@ def add_question():
 
 @app.route('/question/<question_id>/edit ', methods=['GET', 'POST'])
 def edit_question(question_id):
-    pass
+    questions = connection.read_questions()
+    title = ''
+    message = ''
+    for dict in questions:
+        if int(dict['id']) == int(question_id):
+            title += dict['title']
+            message += dict['message']
+    return render_template('edit_question.html', question_id=question_id, title=title, message=message)
 
 
 
