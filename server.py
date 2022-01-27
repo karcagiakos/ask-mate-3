@@ -1,12 +1,14 @@
-from flask import Flask, render_template, redirect, request, url_for
+from flask import Flask, flash, render_template, redirect, request, url_for
 import connection
 import datetime
 import time
+from werkzeug.utils import secure_filename
+import os
+
+ALLOWED_EXTENSIONS = {'png', 'jpg'}
 
 app = Flask(__name__)
-
-
-
+app.config['UPLOAD_FOLDER'] = '/static/images'
 
 @app.route("/", methods=['GET', 'POST'])
 def main():
@@ -59,42 +61,28 @@ def get_answers(id):
 
 @app.route("/questions/<int:id>/new-answer", methods=['GET', 'POST'])
 def get_new_answers(id):
-    saved_data = {}
-    answers = connection.read_answers()
-    last_id = sorted(answers, key=lambda x: int(x['id']), reverse=True)[0]['id']
     if request.method == 'POST':
-        # x = request.form.to_dict()
-        # print(x)
-        # return redirect(url_for('get_answers')
-        saved_data['id'] = int(last_id) + 1
-        saved_data['submission_time'] = int(time.time())
-        saved_data['vote_number'] = 0
-        saved_data['question_id'] = id
-        saved_data['message'] = request.form['answer']
-        saved_data['image'] = 0
-        answers.append(saved_data)
-        connection.write_answer(answers)
+        questions = connection.read_questions()
+        file_name = request.files['file']
+        file_name1 = str(request.files['file']).split()[1][1:-1]
+        if file_name:
+            file_name.save(os.path.join('static/images/', file_name.filename))
+        connection.new_answer(id, request.form['answer'], file_name1)
         return redirect(url_for('get_answers', id=id))
     return render_template('new_answer.html', id=id)
 
 
 @app.route("/add_question", methods=['GET', 'POST'])
 def add_question():
-    saved_data = {}
-    questions = connection.read_questions()
-    last_id = sorted(questions, key=lambda x: int(x['id']), reverse=True)[0]['id']
     if request.method == "POST":
-        saved_data['id'] = int(last_id) + 1
-        saved_data['submission_time'] = int(time.time())
-        saved_data['view_number'] = 0
-        saved_data['vote_number'] = 0
-        saved_data['title'] = request.form['title']
-        saved_data['message'] = request.form['message']
-        saved_data['image'] = 0
-        questions.append(saved_data)
-        connection.write_questions(questions)
+        file_name = request.files['file']
+        file_name1 = str(request.files['file']).split()[1][1:-1]
+        if file_name:
+            file_name.save(os.path.join('static/images/', file_name.filename))
+        connection.new_question(request.form['title'], request.form['message'], file_name1)
         return redirect('/list')
     return render_template('add_question.html')
+
 
 @app.route('/question/<question_id>/edit ', methods=['GET', 'POST'])
 def edit_question(question_id):
