@@ -118,11 +118,10 @@ def display_answer(answer_id):
 
     return render_template('display_answer.html', answer_id=answer_id, answer=answer )
 
-@app.route('/answer/<answer_id>/delete ')
+@app.route('/answer/<answer_id>/delete ', methods=['GET', 'POST'])
 def delete_answer(answer_id):
     connection.delete_answer(answer_id)
-    return redirect('/questions/<int:id>')
-
+    return redirect('/')
 
 if __name__ == "__main__":
     app.run(

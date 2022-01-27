@@ -5,7 +5,13 @@
     {% endblock head %}
 
  {% block body %}
-{{ answer }}
+<h2>{{ answer }}</h2>
 
-adsads
+<form name="delete_answer" method="post">
+<button  class="button button1" onclick="location.href='{{ url_for('delete_answer', answer_id=answer_id) }}'" type="button">
+         Delete Answer</button><br>
+</form>
+
+<button  class="button button1" onclick="location.href='/list'" type="button">
+         Back to the list</button><br>
 {% endblock body %}
