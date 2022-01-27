@@ -47,6 +47,8 @@
     {% for key, value in dicts.items() %}
     {% if key == 'title' %}
     <td><a id="{{ dicts['id'] }}" href="/questions/{{ dicts['id'] }}">{{ value.capitalize() }}</a></td>
+    {% elif key == 'submission_time' %}
+       <td> {{ value }} </td>
     {% elif key == 'image' %}
     {% if value != '0' %}
     <td><a id="{{ dicts['id'] }}" href="/static/images/{{ dicts['image'] }}"><img

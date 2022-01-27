@@ -80,3 +80,9 @@ def new_answer(id, message, file_name):
         saved_data['image'] = file_name
     answers.append(saved_data)
     write_answer(answers)
+
+
+def datetime_format(data):
+    for dicts in data:
+        dicts['submission_time'] = datetime.datetime.fromtimestamp(int(dicts['submission_time']))
+    return data
