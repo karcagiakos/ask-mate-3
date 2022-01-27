@@ -50,8 +50,10 @@ def get_answers(id):
     answers = connection.read_answers()
     for dicts in questions:
         if int(dicts['id']) == int(id):
-           question.append(dicts['title'])
-           question.append((dicts['message']))
+            question.append(dicts['title'])
+            question.append((dicts['message']))
+            dicts['view_number'] = int(dicts['view_number']) + 1
+            connection.write_questions(questions)
     for dicts in answers:
         if int(dicts['question_id']) == int(id):
             answer.append(dicts)
@@ -134,20 +136,30 @@ def delete_answer(answer_id):
 
 @app.route('/answer/<answer_id>/vote_down', methods=['GET', 'POST'])
 @app.route('/answer/<answer_id>/vote_up', methods=['GET', 'POST'])
-def votes(answer_id):
+def vote_answer(answer_id):
+    question_id = ''
     answers = connection.read_answers()
     if request.method == 'POST':
         for dict in answers:
             if dict['id'] == answer_id:
+                question_id += dict['question_id']
                 if request.form['option'] == 'UP':
                     dict['vote_number'] = str(int(dict['vote_number'])+1)
                     connection.write_answer(answers)
-                    return redirect('/list')
+                    return redirect(url_for('get_answers', id=question_id))
                 elif request.form['option'] == 'DOWN':
                     dict['vote_number'] = str(int(dict['vote_number']) - 1)
                     connection.write_answer(answers)
-                    return redirect('/list')
+                    return redirect(url_for('get_answers', id=question_id))
     return render_template('display_answer.html', answer_id=answer_id)
+
+
+@app.route('/question/<question_id>/vote_up')
+@app.route('/question/<question_id>/vote_down')
+def vote_question():
+    pass
+
+
 
 
 if __name__ == "__main__":

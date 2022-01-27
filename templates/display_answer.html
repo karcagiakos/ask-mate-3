@@ -7,11 +7,11 @@
  {% block body %}
 
 
-<form name="option" action="{{url_for('votes', answer_id=answer_id)}}" method="post">
+<form name="option" action="{{url_for('vote_answer', answer_id=answer_id)}}" method="post">
     <input  name="option" type="submit" value="UP">
      </form>
            <h2>{{ answer }}</h2>
-<form name="option" action="{{url_for('votes', answer_id=answer_id)}}" method="post">
+<form name="option" action="{{url_for('vote_answer', answer_id=answer_id)}}" method="post">
 <input  name="option" type="submit" value="DOWN">
          </form>
 <form name="delete_answer" method="post">

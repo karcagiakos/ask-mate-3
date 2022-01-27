@@ -10,7 +10,7 @@
 
 {% block body %}
 
-<form action="{{url_for('votes', answer_id=answer_id)}}" method="post" >
+<form action="{{url_for('vote_answer', answer_id=answer_id)}}" method="post" >
   <!--<label for="question">Question:</label> -->
     <textarea name="title" rows="4" cols="30">{{ title[0] }}</textarea> <br>
     <textarea  name="message" rows="30" cols="30" >{{ message[0]  }}</textarea> <br>
