@@ -31,17 +31,11 @@
      {% for key, value in dicts.items() %}
             {% if key == 'message' %}
             <td><a  href="{{url_for('display_answer', answer_id=dicts['id'])}}">{{ value.capitalize() }}</a></td>
-<<<<<<< HEAD
             {% elif key == 'image' %}
             {% if value != '0' %}
             <td><a id="{{ dicts['id'] }}" href="/static/images/{{ dicts['image'] }}"><img src="/static/images/{{ dicts['image'] }}" height="30"></a></td>
          {% endif %}
         {% else %}
-=======
-
-
-            {% else %}
->>>>>>> d0d8bff94d3bb2662d1e9f9ac02d1d66d95708f0
         <td>{{  value }} </td>
 
             {% endif %}

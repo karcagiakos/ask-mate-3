@@ -9,15 +9,10 @@
 <h1>Add a new question</h1>
 <form action="/add_question" method="post" enctype="multipart/form-data">
   <!--<label for="question">Question:</label> -->
-<<<<<<< HEAD
     <input name="title" value={{ title if title else 'Title'}}> <br><br>
     <textarea id="question" name="message" rows="25" cols="30" >{{ message if message else 'Text here' }}</textarea> <br>
     <p>You can also upload an image for your question (formats: .jpg, .png)</p>
     <input type="file" name="file"/><br><br>
-=======
-    <input  name="title" value='title'> <br>
-    <textarea id="question" name="message" rows="30" cols="30" >Text here</textarea> <br>
->>>>>>> d0d8bff94d3bb2662d1e9f9ac02d1d66d95708f0
     <button class="button button1">Submit</button>
 
 <form/>

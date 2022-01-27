@@ -64,23 +64,12 @@ def get_answers(id):
 @app.route("/questions/<int:id>/new-answer", methods=['GET', 'POST'])
 def get_new_answers(id):
     if request.method == 'POST':
-<<<<<<< HEAD
         questions = connection.read_questions()
         file_name = request.files['file']
         file_name1 = str(request.files['file']).split()[1][1:-1]
         if file_name:
             file_name.save(os.path.join('static/images/', file_name.filename))
         connection.new_answer(id, request.form['answer'], file_name1)
-=======
-        saved_data['id'] = int(last_id) + 1
-        saved_data['submission_time'] = int(time.time())
-        saved_data['vote_number'] = 0
-        saved_data['question_id'] = id
-        saved_data['message'] = request.form['answer']
-        saved_data['image'] = 0
-        answers.append(saved_data)
-        connection.write_answer(answers)
->>>>>>> d0d8bff94d3bb2662d1e9f9ac02d1d66d95708f0
         return redirect(url_for('get_answers', id=id))
     return render_template('new_answer.html', id=id)
 
@@ -96,12 +85,7 @@ def add_question():
         return redirect('/list')
     return render_template('add_question.html')
 
-<<<<<<< HEAD
-
-@app.route('/question/<question_id>/edit ', methods=['GET', 'POST'])
-=======
 @app.route('/question/<int:question_id>/edit', methods=['GET', 'POST'])
->>>>>>> d0d8bff94d3bb2662d1e9f9ac02d1d66d95708f0
 def edit_question(question_id):
     questions = connection.read_questions()
     title = []
