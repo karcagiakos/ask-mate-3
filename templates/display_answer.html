@@ -8,11 +8,11 @@
 
 
 <form name="option" action="{{url_for('vote_answer', answer_id=answer_id)}}" method="post">
-    <input  name="option" type="submit" value="UP">
+    <input class="button button2" name="option" type="submit" value="UPVOTE">
      </form>
            <h2>{{ answer }}</h2>
 <form name="option" action="{{url_for('vote_answer', answer_id=answer_id)}}" method="post">
-<input  name="option" type="submit" value="DOWN">
+<input class="button button2" name="option" type="submit" value="DOWNVOTE">
          </form>
 <form name="delete_answer" method="post">
 <button  class="button button1" onclick="location.href='{{ url_for('delete_answer', answer_id=answer_id) }}'" type="button">

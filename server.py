@@ -136,11 +136,11 @@ def vote_answer(answer_id):
         for dict in answers:
             if dict['id'] == answer_id:
                 question_id += dict['question_id']
-                if request.form['option'] == 'UP':
+                if request.form['option'] == 'UPVOTE':
                     dict['vote_number'] = str(int(dict['vote_number'])+1)
                     connection.write_answer(answers)
                     return redirect(url_for('get_answers', id=question_id))
-                elif request.form['option'] == 'DOWN':
+                elif request.form['option'] == 'DOWNVOTE':
                     dict['vote_number'] = str(int(dict['vote_number']) - 1)
                     connection.write_answer(answers)
                     return redirect(url_for('get_answers', id=question_id))
@@ -154,11 +154,11 @@ def vote_question(question_id):
     if request.method == 'POST':
         for dict in questions:
             if dict['id'] == question_id:
-                if request.form['option'] == 'UP':
+                if request.form['option'] == 'UPVOTE':
                     dict['vote_number'] = int(dict['vote_number']) + 1
                     connection.write_questions(questions)
                     return redirect('/list')
-                elif request.form['option'] == 'DOWN':
+                elif request.form['option'] == 'DOWNVOTE':
                     dict['vote_number'] = int(dict['vote_number']) - 1
                     connection.write_questions(questions)
                     return redirect('/list')

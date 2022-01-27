@@ -3,12 +3,12 @@
 
 
 <form name="option" action="{{url_for('vote_question', question_id=id)}}" method="post">
-    <input  name="option" type="submit" value="UP">
+    <input class="button button2"  name="option" type="submit" value="UPVOTE">
      </form>
            <h1>Title: {{ question[0] }}</h1>
 
 <form name="option" action="{{url_for('vote_question', question_id=id)}}" method="post">
-<input  name="option" type="submit" value="DOWN">
+<input class="button button2" name="option" type="submit" value="DOWNVOTE">
          </form>
 
     <h1>Message: {{ question[1] }}</h1>
