@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 {% block head %}
 
-    <h1>Title: {{ question[0] }}</h1>
+<h1 xmlns="http://www.w3.org/1999/html">Title: {{ question[0] }}</h1>
     <h1>Message: {{ question[1] }}</h1>
 {% endblock head %}
     {% block body %}
@@ -22,7 +22,9 @@
      {% for key, value in dicts.items() %}
             {% if key == 'message' %}
             <td><a  href="{{url_for('display_answer', answer_id=dicts['id'])}}">{{ value.capitalize() }}</a></td>
-        {% else %}
+
+
+            {% else %}
         <td>{{  value }} </td>
 
             {% endif %}
@@ -41,7 +43,5 @@
 <button  class="button button2" onclick="location.href='{{url_for('get_new_answers', id=id)}}'" type="button">
          Edit answer</button><br>
 
-<button  class="button button2" onclick="location.href='{{url_for('edit_question', question_id=id)}}'" type="button">
-         Edit question</button><br>
 
     {% endblock body %}

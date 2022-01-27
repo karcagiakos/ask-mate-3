@@ -12,7 +12,7 @@ def read_answers():
 def write_questions(data):
     with open('sample_data/question.csv', 'w') as file:
         fieldnames = ['id','submission_time','view_number','vote_number','title','message','image']
-        writer = csv.DictWriter(file, fieldnames=fieldnames, newline='')
+        writer = csv.DictWriter(file, fieldnames=fieldnames,)
         writer.writeheader()
         for dicts in data:
             writer.writerow(dicts)
@@ -20,7 +20,7 @@ def write_questions(data):
 def write_answer(data):
     with open('sample_data/answer.csv', 'w') as file:
         fieldnames = ['id', 'submission_time', 'vote_number', 'question_id', 'message', 'image']
-        writer = csv.DictWriter(file, fieldnames=fieldnames, )
+        writer = csv.DictWriter(file, fieldnames=fieldnames,)
         writer.writeheader()
         for dicts in data:
             writer.writerow(dicts)

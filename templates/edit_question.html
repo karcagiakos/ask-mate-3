@@ -10,10 +10,10 @@
 
 {% block body %}
 
-<form action="/edit_question", method="post" >
+<form action="{{url_for('votes', answer_id=answer_id)}}" method="post" >
   <!--<label for="question">Question:</label> -->
-    <input  name="title" value={{ title }}> <br>
-    <textarea id="question" name="message" rows="30" cols="30" >{{ message  }}</textarea> <br>
+    <textarea name="title" rows="4" cols="30">{{ title[0] }}</textarea> <br>
+    <textarea  name="message" rows="30" cols="30" >{{ message[0]  }}</textarea> <br>
     <button class="button button1">Submit</button>
 </form>
 

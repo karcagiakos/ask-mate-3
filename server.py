@@ -63,9 +63,6 @@ def get_new_answers(id):
     answers = connection.read_answers()
     last_id = sorted(answers, key=lambda x: int(x['id']), reverse=True)[0]['id']
     if request.method == 'POST':
-        # x = request.form.to_dict()
-        # print(x)
-        # return redirect(url_for('get_answers')
         saved_data['id'] = int(last_id) + 1
         saved_data['submission_time'] = int(time.time())
         saved_data['vote_number'] = 0
@@ -96,15 +93,20 @@ def add_question():
         return redirect('/list')
     return render_template('add_question.html')
 
-@app.route('/question/<question_id>/edit ', methods=['GET', 'POST'])
+@app.route('/question/<int:question_id>/edit', methods=['GET', 'POST'])
 def edit_question(question_id):
     questions = connection.read_questions()
-    title = ''
-    message = ''
+    title = []
+    message = []
     for dict in questions:
         if int(dict['id']) == int(question_id):
-            title += dict['title']
-            message += dict['message']
+            title.append(dict['title'])
+            message.append(dict['message'])
+        if request.method == 'POST':
+            dict['title'] = request.form['title']
+            dict['message'] = request.form['message']
+            connection.write_questions(questions)
+            return redirect(url_for('get_answers', id=question_id))
     return render_template('edit_question.html', question_id=question_id, title=title, message=message)
 
 
@@ -122,7 +124,6 @@ def display_answer(answer_id):
     for dict in answers:
         if int(dict['id']) == int(answer_id):
             answer += dict['message']
-
     return render_template('display_answer.html', answer_id=answer_id, answer=answer )
 
 @app.route('/answer/<answer_id>/delete ', methods=['GET', 'POST'])
@@ -130,9 +131,28 @@ def delete_answer(answer_id):
     connection.delete_answer(answer_id)
     return redirect('/')
 
+
+@app.route('/answer/<answer_id>/vote_down', methods=['GET', 'POST'])
+@app.route('/answer/<answer_id>/vote_up', methods=['GET', 'POST'])
+def votes(answer_id):
+    answers = connection.read_answers()
+    if request.method == 'POST':
+        for dict in answers:
+            if dict['id'] == answer_id:
+                if request.form['option'] == 'UP':
+                    dict['vote_number'] = str(int(dict['vote_number'])+1)
+                    connection.write_answer(answers)
+                    return redirect('/list')
+                elif request.form['option'] == 'DOWN':
+                    dict['vote_number'] = str(int(dict['vote_number']) - 1)
+                    connection.write_answer(answers)
+                    return redirect('/list')
+    return render_template('display_answer.html', answer_id=answer_id)
+
+
 if __name__ == "__main__":
     app.run(
         #host = "192.168.1.100",
         debug = True,
-        port = 3000
+        port = 2000
     )
