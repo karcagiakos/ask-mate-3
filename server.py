@@ -43,11 +43,12 @@ def add_new_answer(id):
 @app.route("/add_question", methods=['GET', 'POST'])
 def add_question():
     if request.method == "POST":
-        file_name = request.files['file']
-        file_name1 = str(request.files['file']).split()[1][1:-1]
-        if file_name:
-            file_name.save(os.path.join('static/images/', file_name.filename))
-        connection.new_question(request.form['title'], request.form['message'], file_name1)
+        temp_file_name = request.files['file']
+        file_name = str(request.files['file']).split()[1][1:-1]
+        if temp_file_name:
+            temp_file_name.save(os.path.join('static/images/', temp_file_name.filename))
+        data = [str(datetime.datetime.now()), 0, 0, request.form['title'], request.form['message'], file_name]
+        data_manager.add_new_question(data)
         return redirect('/list')
     return render_template('add_question.html')
 

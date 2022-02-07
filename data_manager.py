@@ -41,3 +41,11 @@ def add_new_answer(cursor, data):
     VALUES (%s,%s,%s,%s,%s)
     """
     cursor.execute(query, data)
+
+@database_common.connection_handler
+def add_new_question(cursor, data):
+    query = """
+    INSERT INTO question (submission_time,view_number, vote_number, title, message, image)
+    VALUES (%s,%s,%s,%s,%s,%s)
+    """
+    cursor.execute(query, data)
