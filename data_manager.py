@@ -49,3 +49,12 @@ def add_new_question(cursor, data):
     VALUES (%s,%s,%s,%s,%s,%s)
     """
     cursor.execute(query, data)
+
+@database_common.connection_handler
+def update_question(cursor, data):
+    query = """
+    UPDATE question
+    SET title = %s, message = %s
+    WHERE id = %s
+    """
+    cursor.execute(query,data)

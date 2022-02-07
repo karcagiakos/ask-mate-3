@@ -54,22 +54,13 @@ def add_question():
 
 @app.route('/question/<int:question_id>/edit', methods=['GET', 'POST'])
 def edit_question(question_id):
-    questions = connection.read_questions()
-    title = []
-    message = []
-    for dict in questions:
-        if int(dict['id']) == int(question_id):
-            title.append(dict['title'])
-            message.append(dict['message'])
+    question = data_manager.get_single_question(question_id)
     if request.method == 'POST':
-        for dict in questions:
-            if int(dict['id']) == int(question_id):
-                dict['title'] = request.form['title']
-                dict['message'] = request.form['message']
-                connection.write_questions(questions)
-                return redirect(url_for('get_answers', id=question_id))
+        data = [request.form['title'], request.form['message'],question_id]
+        data_manager.update_question(data)
+        return redirect(url_for('list_answers', id=question_id))
 
-    return render_template('edit_question.html', question_id=question_id, title=title, message=message)
+    return render_template('edit_question.html', question_id=question_id, question=question)
 
 
 
