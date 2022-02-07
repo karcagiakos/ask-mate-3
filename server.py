@@ -23,7 +23,7 @@ def list_questions(sort_by='submission_time'):
 
 @app.route("/questions/<int:id>", methods=['GET','POST'])
 def list_answers(id):
-    answers = data_manager.display_answer(id)
+    answers = data_manager.list_answers(id)
     question = data_manager.get_single_question(id)
     return render_template('display_questions.html', id=id, question=question, answer=answers)
 
@@ -65,7 +65,7 @@ def edit_question(question_id):
 
 @app.route('/question/<question_id>/delete')
 def delete_question(question_id):
-    answer_ids = [x['id'] for x in data_manager.display_answer(question_id)]
+    answer_ids = [x['id'] for x in data_manager.list_answers(question_id)]
     data_manager.delete_comment(question_id)
     for i in answer_ids:
         data_manager.delete_comment(i)
@@ -77,12 +77,9 @@ def delete_question(question_id):
 
 @app.route('/answer/<int:answer_id>', methods=['GET', 'POST'])
 def display_answer(answer_id):
-    answers = connection.read_answers()
-    answer = ''
-    for dict in answers:
-        if int(dict['id']) == int(answer_id):
-            answer += dict['message']
-    return render_template('display_answer.html', answer_id=answer_id, answer=answer )
+    answers = data_manager.display_answer(answer_id)
+    print(answers)
+    return render_template('display_answer.html', answer_id=answer_id, answer=answers )
 
 @app.route('/answer/<answer_id>/delete ', methods=['GET', 'POST'])
 def delete_answer(answer_id):

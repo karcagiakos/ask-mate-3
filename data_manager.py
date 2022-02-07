@@ -18,10 +18,19 @@ def get_answers(cursor):
     return cursor.fetchall()
 
 @database_common.connection_handler
-def display_answer(cursor, id):
+def list_answers(cursor, id):
     query = """
     SELECT * FROM answer 
     WHERE question_id = %(id)s
+    """
+    cursor.execute(query, {'id': id})
+    return cursor.fetchall()
+
+@database_common.connection_handler
+def display_answer(cursor, id):
+    query = """
+    SELECT * FROM answer 
+    WHERE  id = %(id)s
     """
     cursor.execute(query, {'id': id})
     return cursor.fetchall()

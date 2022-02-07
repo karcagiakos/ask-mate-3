@@ -10,7 +10,7 @@
 <form name="option" action="{{url_for('vote_answer', answer_id=answer_id)}}" method="post">
     <input class="button button2" name="option" type="submit" value="UPVOTE">
      </form>
-           <h2>{{ answer }}</h2>
+           <h2>{{ answer[0]['message'] }}</h2>
 <form name="option" action="{{url_for('vote_answer', answer_id=answer_id)}}" method="post">
 <input class="button button2" name="option" type="submit" value="DOWNVOTE">
          </form>
