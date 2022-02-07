@@ -69,7 +69,7 @@ def delete_question(question_id):
     data_manager.delete_comment(question_id)
     for i in answer_ids:
         data_manager.delete_comment(i)
-    data_manager.delete_answer(question_id)
+    data_manager.delete_answer_with_question(question_id)
     data_manager.delete_question_tag(question_id)
     data_manager.delete_question(question_id)
     return redirect('/list')
@@ -80,9 +80,12 @@ def display_answer(answer_id):
     answers = data_manager.display_answer(answer_id)
     return render_template('display_answer.html', answer_id=answer_id, answer=answers )
 
-@app.route('/answer/<answer_id>/delete ', methods=['GET', 'POST'])
+@app.route('/answer/<int:answer_id>/delete ', methods=['GET', 'POST'])
 def delete_answer(answer_id):
-    connection.delete_answer(answer_id)
+    answer_ids = [x['id'] for x in data_manager.list_answers(answer_id)]
+    for i in answer_ids:
+        data_manager.delete_comment(i)
+    data_manager.delete_answer(answer_id)
     return redirect('/')
 
 

@@ -69,10 +69,18 @@ def update_question(cursor, data):
     cursor.execute(query,data)
 
 @database_common.connection_handler
-def delete_answer(cursor, id):
+def delete_answer_with_question(cursor, id):
     query = """
     DELETE FROM answer
     WHERE question_id = %(id)s
+    """
+    cursor.execute(query, {'id': id})
+
+@database_common.connection_handler
+def delete_answer(cursor, id):
+    query = """
+    DELETE FROM answer
+    WHERE id = %(id)s
     """
     cursor.execute(query, {'id': id})
 
