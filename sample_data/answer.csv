@@ -1,6 +1,6 @@
 id,submission_time,vote_number,question_id,message,image
 1,1493398154,14,1,You need to use brackets: my_list = [],
-2,1493088154,35,1,Look it up in the Python docs,
+2,1493088154,32,1,Look it up in the Python docs,
 3,1643190525,0,9,New answer,0
 4,1643190679,0,9,New answer really new,0
 5,1643207552,0,11,New answer heredsadasds,0
@@ -8,10 +8,6 @@ id,submission_time,vote_number,question_id,message,image
 7,1643212431,0,8,New answer here,0
 8,1643212437,0,8,New answer here,0
 10,1643302939,0,7,"New answer here
-",0
-11,1643308415,-1,13,"New answer here
-dasdsadasdasds",0
-12,1643308432,0,13,"New answer here
 ",0
 13,1643308642,0,15,"New answer here
 65756756756",0

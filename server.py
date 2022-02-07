@@ -19,7 +19,10 @@ def datetime_format(value, format='%Y/%m/%d %H:%M:%S'):
 
 env.filters['datetime_format'] = datetime_format
 
-@app.route("/", methods=['GET', 'POST'])
+@app.route("/", methods=['GET'])
+def show_main_page():
+    return redirect("/list")
+
 @app.route("/list", methods=['GET', 'POST'])
 def list_questions(sort_by='submission_time'):
     # date_time = datetime.datetime.fromtimestamp()
@@ -30,7 +33,6 @@ def list_questions(sort_by='submission_time'):
         if request.form['headers'][-1] == '+':
             if ordering_by == 'view_number' or ordering_by == 'vote_number':
                 data = sorted(data, key=lambda x: int(x[ordering_by]))
-        # connection.write_questions(data)
             elif ordering_by == 'submission_time':
                 data = sorted(data, key=lambda x: x[ordering_by])
             else:
@@ -43,10 +45,9 @@ def list_questions(sort_by='submission_time'):
                 data = sorted(data, key=lambda x: x[ordering_by], reverse=True)
             else:
                 data = sorted(data, key=lambda x: x[ordering_by].capitalize())[::-1]
-        return render_template('main_page.html', data=data)
     return render_template('main_page.html', data=data)
 
-@app.route("/questions/<int:id>", methods=['GET', 'DELETE', 'POST'])
+@app.route("/questions/<int:id>", methods=['GET','POST'])
 def get_answers(id):
     questions = connection.read_questions()
     question = []
@@ -62,7 +63,8 @@ def get_answers(id):
         if int(dicts['question_id']) == int(id):
             answer.append(dicts)
     answer = connection.datetime_format(answer)
-    return render_template('display_questions.html', datetime=datetime, id=id,questions=questions, answers=answers, question=question, answer=answer)
+    return render_template('display_questions.html', datetime=datetime, id=id,
+                           questions=questions, answers=answers, question=question, answer=answer)
 
 @app.route("/questions/<int:id>/new-answer", methods=['GET', 'POST'])
 def get_new_answers(id):
@@ -97,11 +99,14 @@ def edit_question(question_id):
         if int(dict['id']) == int(question_id):
             title.append(dict['title'])
             message.append(dict['message'])
-        if request.method == 'POST':
-            dict['title'] = request.form['title']
-            dict['message'] = request.form['message']
-            connection.write_questions(questions)
-            return redirect(url_for('get_answers', id=question_id))
+    if request.method == 'POST':
+        for dict in questions:
+            if int(dict['id']) == int(question_id):
+                dict['title'] = request.form['title']
+                dict['message'] = request.form['message']
+                connection.write_questions(questions)
+                return redirect(url_for('get_answers', id=question_id))
+
     return render_template('edit_question.html', question_id=question_id, title=title, message=message)
 
 
@@ -140,7 +145,8 @@ def vote_answer(answer_id):
                     dict['vote_number'] = str(int(dict['vote_number'])+1)
                     connection.write_answer(answers)
                     return redirect(url_for('get_answers', id=question_id))
-                elif request.form['option'] == 'DOWNVOTE':
+                elif request.form['option'] == 'DOWNVOTE' \
+                                               '':
                     dict['vote_number'] = str(int(dict['vote_number']) - 1)
                     connection.write_answer(answers)
                     return redirect(url_for('get_answers', id=question_id))
