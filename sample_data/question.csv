@@ -1,14 +1,9 @@
 id,submission_time,view_number,vote_number,title,message,image
-1,1493368154,29,7,"How to make lists in Python?","I am totally new to this, any hints?",
-2,1493068124,15,9,"Wordpress loading multiple jQuery Versions","I developed a plugin that uses the jquery booklet plugin (http://builtbywill.com/booklet/#/) this plugin binds a function to $ so I cann call $('.myBook').booklet();
-
-I could easy managing the loading order with wp_enqueue_script so first I load jquery then I load booklet so everything is fine.
-
-BUT in my theme i also using jquery via webpack so the loading order is now following:
-
-jquery
-booklet
-app.js (bundled file with webpack, including jquery)","images/image1.png"
-3,1493015432,1364,57,"Drawing canvas with an image picked with Cordova Camera Plugin","I'm getting an image from device and drawing a canvas with filters using Pixi JS. It works all well using computer to get an image. But when I'm on IOS, it throws errors such as cross origin issue, or that I'm trying to use an unknown format.
-
-This is the code I'm using to draw the image (that works on web/desktop but not cordova built ios app)",
+15,1643293632,5,0,titulus10 újra,"asdaklsjdklaglorsvmijkmljagvrsjikmluagvrujikmlargvkljimoargvikmljargvcjimlkoarcgvsijlmkafgklmv,afgjklmnsv íadfgjkmnvaertgvhijklrtyeghijklmnu.dftbcgvxy -ydrtgbcfkvx cdfgrtvxybjkn redtcfghjklmnvxy ,.rcdefgtvxy hijklmnu,.Text here",0
+12,1643214919,3,0,titleasdasasdsadasd,Text hereasdasdasdasd,insert-image-funny-dog.jpg
+11,1643205161,1,0,title,Text here,0
+10,1643192500,1,0,565,4645656,0
+9,1643131402,0,0,title,Text here,0
+8,1643124710,26,1,Jinj2 problemz,Jinja2 not working plz heeeeelp,250478154_10226247385274764_2585792232334092657_n.jpg
+7,1643123105,17,-1,titulus,"asdaklsjdklaglorsvmijkmljagvrsjikmluagvrujikmlargvkljimoargvikmljargvcjimlkoarcgvsijlmkafgklmv,afgjklmnsv íadfgjkmnvaertgvhijklrtyeghijklmnu.dftbcgvxy -ydrtgbcfkvx cdfgrtvxybjkn redtcfghjklmnvxy ,.rcdefgtvxy hijklmnu,.Text here",0
+1,1493368154,37,7,write list in python,how,0

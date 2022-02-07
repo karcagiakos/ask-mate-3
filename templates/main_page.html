@@ -1,0 +1,67 @@
+{% extends 'layout.html' %}
+
+{% block head %}
+
+<title>AskMate project</title>
+
+{% endblock head %}
+
+
+{% block body %}
+
+<h1>BUZZSAWS Q/A</h1>
+
+<button class="button button2" onclick="location.href='/add_question'" type="button">
+    Add a new question
+</button><br>
+
+
+<form action="/list" method="post">
+    <label for="sorter">Choose how to sort</label>
+    <select name="headers" id="sorter">
+        <option name="submission_time+" value="submission_time+">submission_time+</option>
+        <option name="submission_time-" value="submission_time-">submission_time-</option>
+        <option name="title+" value="title+">title+</option>
+        <option name="title-" value="title-">title-</option>
+        <option name="message+" value="message+">message+</option>
+        <option name="message-" value="message-">message-</option>
+        <option name="view_number+" value="view_number+">view_number+</option>
+        <option name="view_number-" value="view_number-">view_number-</option>
+        <option name="vote_number+" value="vote_number+">vote_number+</option>
+        <option name="vote_number-" value="vote_number-">vote_number-</option>
+
+        <input type="submit">
+    </select>
+</form>
+<table>
+    <tr>
+        {% for key in data[0].keys() %}
+        <th>
+            {{ key.capitalize() }}
+        </th>
+        {% endfor %}
+    </tr>
+    <tr>
+        {% for dicts in data%}
+    </tr>
+    {% for key, value in dicts.items() %}
+    {% if key == 'title' %}
+    <td><a id="{{ dicts['id'] }}" href="/questions/{{ dicts['id'] }}">{{ value.capitalize() }}</a></td>
+    {% elif key == 'submission_time' %}
+       <td> {{ value }} </td>
+    {% elif key == 'image' %}
+    {% if value != '0' %}
+    <td><a id="{{ dicts['id'] }}" href="/static/images/{{ dicts['image'] }}"><img
+            src="/static/images/{{ dicts['image'] }}" height="30"></a></td>
+    {% endif %}
+    {% else %}
+    <td>{{ value.capitalize() }}</td>
+    {% endif %}
+
+
+    {% endfor %}
+    {% endfor %}
+
+</table>
+
+{% endblock body %}
