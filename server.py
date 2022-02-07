@@ -59,14 +59,19 @@ def edit_question(question_id):
         data = [request.form['title'], request.form['message'],question_id]
         data_manager.update_question(data)
         return redirect(url_for('list_answers', id=question_id))
-
     return render_template('edit_question.html', question_id=question_id, question=question)
 
 
 
 @app.route('/question/<question_id>/delete')
 def delete_question(question_id):
-    connection.delete_question(question_id)
+    answer_ids = [x['id'] for x in data_manager.display_answer(question_id)]
+    data_manager.delete_comment(question_id)
+    for i in answer_ids:
+        data_manager.delete_comment(i)
+    data_manager.delete_answer(question_id)
+    data_manager.delete_question_tag(question_id)
+    data_manager.delete_question(question_id)
     return redirect('/list')
 
 
