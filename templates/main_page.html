@@ -11,9 +11,7 @@
 
 <h1>BUZZSAWS Q/A</h1>
 
-<button class="button button2" onclick="location.href='/add_question'" type="button">
-    Add a new question
-</button><br>
+
 
 
 <form action="/list" method="post">
@@ -46,7 +44,7 @@
     </tr>
     {% for key, value in dicts.items() %}
     {% if key == 'title' %}
-    <td><a id="{{ dicts['id'] }}" href="/questions/{{ dicts['id'] }}">{{ value.capitalize() }}</a></td>
+    <td><a id="{{ dicts['id'] }}" href="/questions/{{ dicts['id'] }}">{{ value }}</a></td>
     {% elif key == 'submission_time' %}
        <td> {{ value }} </td>
     {% elif key == 'image' %}
@@ -55,7 +53,7 @@
             src="/static/images/{{ dicts['image'] }}" height="30"></a></td>
     {% endif %}
     {% else %}
-    <td>{{ value.capitalize() }}</td>
+    <td>{{ value }}</td>
     {% endif %}
 
 
@@ -63,5 +61,10 @@
     {% endfor %}
 
 </table>
+
+
+    <button class="button button2" onclick="location.href='/add_question'" type="button">
+    Add a new question
+</button><br>
 
 {% endblock body %}

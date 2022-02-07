@@ -5,6 +5,8 @@ import jinja2
 from werkzeug.utils import secure_filename
 import os
 
+import data_manager
+
 ALLOWED_EXTENSIONS = {'png', 'jpg'}
 
 app = Flask(__name__)
@@ -25,46 +27,29 @@ def show_main_page():
 
 @app.route("/list", methods=['GET', 'POST'])
 def list_questions(sort_by='submission_time'):
-    # date_time = datetime.datetime.fromtimestamp()
-    data = connection.read_questions()
-    data = connection.datetime_format(data)
-    if request.method == 'POST':
-        ordering_by = request.form['headers'][:-1]
-        if request.form['headers'][-1] == '+':
-            if ordering_by == 'view_number' or ordering_by == 'vote_number':
-                data = sorted(data, key=lambda x: int(x[ordering_by]))
-            elif ordering_by == 'submission_time':
-                data = sorted(data, key=lambda x: x[ordering_by])
-            else:
-                data = sorted(data, key=lambda x: x[ordering_by].capitalize())
-        else:
-            if ordering_by == 'view_number' or ordering_by == 'vote_number':
-                data = sorted(data, key=lambda x: int(x[ordering_by]))[::-1]
-            # connection.write_questions(data)
-            elif ordering_by == 'submission_time':
-                data = sorted(data, key=lambda x: x[ordering_by], reverse=True)
-            else:
-                data = sorted(data, key=lambda x: x[ordering_by].capitalize())[::-1]
+    data = data_manager.get_questions()
+    print(data)
     return render_template('main_page.html', data=data)
 
 @app.route("/questions/<int:id>", methods=['GET','POST'])
 def get_answers(id):
-    questions = connection.read_questions()
-    question = []
-    answer = []
-    answers = connection.read_answers()
-    for dicts in questions:
-        if int(dicts['id']) == int(id):
-            question.append(dicts['title'])
-            question.append((dicts['message']))
-            dicts['view_number'] = int(dicts['view_number']) + 1
-            connection.write_questions(questions)
-    for dicts in answers:
-        if int(dicts['question_id']) == int(id):
-            answer.append(dicts)
-    answer = connection.datetime_format(answer)
-    return render_template('display_questions.html', datetime=datetime, id=id,
-                           questions=questions, answers=answers, question=question, answer=answer)
+    answers = data_manager.display_answer(id)
+    question = data_manager.get_single_question(id)
+    # questions = data_manager.get_questions()
+    # answers = data_manager.get_answers()
+    # question = []
+    # answer = []
+    # for dicts in questions:
+    #     if int(dicts['id']) == int(id):
+    #         question.append(dicts['title'])
+    #         question.append((dicts['message']))
+    #         dicts['view_number'] = int(dicts['view_number']) + 1
+    #         connection.write_questions(questions)
+    # for dicts in answers:
+    #     if int(dicts['question_id']) == int(id):
+    #         answer.append(dicts)
+    return render_template('display_questions.html', id=id,
+                           question=question, answer=answers)
 
 @app.route("/questions/<int:id>/new-answer", methods=['GET', 'POST'])
 def get_new_answers(id):

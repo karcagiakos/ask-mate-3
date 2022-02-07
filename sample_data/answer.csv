@@ -1,5 +1,5 @@
 id,submission_time,vote_number,question_id,message,image
-1,1493398154,14,1,You need to use brackets: my_list = [],
+1,1493398154,16,1,You need to use brackets: my_list = [],
 2,1493088154,32,1,Look it up in the Python docs,
 3,1643190525,0,9,New answer,0
 4,1643190679,0,9,New answer really new,0
