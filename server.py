@@ -78,7 +78,6 @@ def delete_question(question_id):
 @app.route('/answer/<int:answer_id>', methods=['GET', 'POST'])
 def display_answer(answer_id):
     answers = data_manager.display_answer(answer_id)
-    print(answers)
     return render_template('display_answer.html', answer_id=answer_id, answer=answers )
 
 @app.route('/answer/<answer_id>/delete ', methods=['GET', 'POST'])
