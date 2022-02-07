@@ -33,3 +33,11 @@ def get_single_question(cursor, id):
     """
     cursor.execute(query, {'id': id})
     return cursor.fetchall()
+
+@database_common.connection_handler
+def add_new_answer(cursor, data):
+    query = """
+    INSERT INTO answer (submission_time,vote_number, question_id, message, image)
+    VALUES (%s,%s,%s,%s,%s)
+    """
+    cursor.execute(query, data)

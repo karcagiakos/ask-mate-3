@@ -30,7 +30,7 @@
     </tr>
      {% for key, value in dicts.items() %}
             {% if key == 'message' %}
-            <td><a  href="{{url_for('display_answer', answer_id=dicts['id'])}}">{{ value.capitalize() }}</a></td>
+            <td><a  href="{{url_for('display_answer', answer_id=dicts['id'])}}">{{ value }}</a></td>
             {% elif key == 'image' %}
             {% if value != '0' %}
             <td><a id="{{ dicts['id'] }}" href="/static/images/{{ dicts['image'] }}"><img src="/static/images/{{ dicts['image'] }}" height="30"></a></td>
@@ -45,7 +45,7 @@
        </table>
         <button  class="button button2" onclick="location.href='{{url_for('edit_question', question_id=id)}}'" type="button">
          Edit question</button><br>
-        <button  class="button button2" onclick="location.href='{{url_for('get_new_answers', id=id)}}'" type="button">
+        <button  class="button button2" onclick="location.href='{{url_for('add_new_answer', id=id)}}'" type="button">
          Add a new answer</button><br>
 
 <form  name="delete_question" method="post">

@@ -1,7 +1,6 @@
 from flask import Flask, flash, render_template, redirect, request, url_for
 import connection
 import datetime
-import jinja2
 from werkzeug.utils import secure_filename
 import os
 
@@ -11,15 +10,7 @@ ALLOWED_EXTENSIONS = {'png', 'jpg'}
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = '/static/images'
-env = jinja2.Environment()
 
-# @app.template_filter('datetimeformat')
-def datetime_format(value, format='%Y/%m/%d %H:%M:%S'):
-    return value.strftime(format)
-
-
-
-env.filters['datetime_format'] = datetime_format
 
 @app.route("/", methods=['GET'])
 def show_main_page():
@@ -28,39 +19,24 @@ def show_main_page():
 @app.route("/list", methods=['GET', 'POST'])
 def list_questions(sort_by='submission_time'):
     data = data_manager.get_questions()
-    print(data)
     return render_template('main_page.html', data=data)
 
 @app.route("/questions/<int:id>", methods=['GET','POST'])
-def get_answers(id):
+def list_answers(id):
     answers = data_manager.display_answer(id)
     question = data_manager.get_single_question(id)
-    # questions = data_manager.get_questions()
-    # answers = data_manager.get_answers()
-    # question = []
-    # answer = []
-    # for dicts in questions:
-    #     if int(dicts['id']) == int(id):
-    #         question.append(dicts['title'])
-    #         question.append((dicts['message']))
-    #         dicts['view_number'] = int(dicts['view_number']) + 1
-    #         connection.write_questions(questions)
-    # for dicts in answers:
-    #     if int(dicts['question_id']) == int(id):
-    #         answer.append(dicts)
-    return render_template('display_questions.html', id=id,
-                           question=question, answer=answers)
+    return render_template('display_questions.html', id=id, question=question, answer=answers)
 
 @app.route("/questions/<int:id>/new-answer", methods=['GET', 'POST'])
-def get_new_answers(id):
+def add_new_answer(id):
     if request.method == 'POST':
-        questions = connection.read_questions()
-        file_name = request.files['file']
-        file_name1 = str(request.files['file']).split()[1][1:-1]
-        if file_name:
-            file_name.save(os.path.join('static/images/', file_name.filename))
-        connection.new_answer(id, request.form['answer'], file_name1)
-        return redirect(url_for('get_answers', id=id))
+        temp_file_name = request.files['file']
+        file_name = str(request.files['file']).split()[1][1:-1]
+        if temp_file_name:
+            temp_file_name.save(os.path.join('static/images/', temp_file_name.filename))
+        data = [str(datetime.datetime.now()),0,id,request.form['answer'],file_name]
+        data_manager.add_new_answer(data)
+        return redirect(url_for('list_answers', id=id))
     return render_template('new_answer.html', id=id)
 
 
