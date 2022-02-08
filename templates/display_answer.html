@@ -31,7 +31,8 @@
         {% endif  %}
         </table>
 
-
+<button  class="button button2" onclick="location.href='{{url_for('edit_answer', answer_id=answer_id)}}'" type="button">
+         Edit answer</button>
 
 <form name="option" action="{{url_for('vote_down_answer', answer_id=answer_id)}}" >
 <input class="button button2" name="vote_down" type="submit" value="DOWNVOTE">

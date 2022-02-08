@@ -190,3 +190,13 @@ def search_answers(cursor, searched_answer):
         """
     cursor.execute(query, {'s_a': f'%{searched_answer}%'})
     return cursor.fetchall()
+
+
+
+@database_common.connection_handler
+def update_answer(cursor,id,message):
+    query = """
+    UPDATE answer
+    SET message = %(message)s
+    WHERE id = %(id)s"""
+    cursor.execute(query, {'id': id, 'message': message})

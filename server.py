@@ -76,7 +76,7 @@ def delete_question(question_id):
     return redirect('/list')
 
 
-@app.route('/answer/<int:answer_id>', methods=['GET', 'POST'])
+@app.route('/answer/<int:answer_id>/', methods=['GET', 'POST'])
 def display_answer(answer_id):
     answers = data_manager.display_answer(answer_id)
     comments = data_manager.get_comments_for_answers(answer_id)
@@ -165,6 +165,16 @@ def search_questions():
     else:
         return redirect('/')
     return render_template('searched_question.html', details=details)
+
+@app.route('/answer/<int:answer_id>/edit', methods=['GET', 'POST'])
+def edit_answer(answer_id):
+    answers = data_manager.display_answer(answer_id)
+    comments = data_manager.get_comments_for_answers(answer_id)
+    if request.method == 'POST':
+        # id = answers[0]['question_id']
+        data_manager.update_answer(answer_id,request.form['message'])
+        return redirect(url_for('list_answers', id=answers[0]['question_id']))
+    return render_template('edit_answer.html', answer_id=answer_id, answer=answers, comments=comments )
 
 
 if __name__ == "__main__":
