@@ -171,3 +171,22 @@ def add_new_comment_answer(cursor, data):
     VALUES (%s,%s,%s,%s)
     """
     cursor.execute(query, data)
+
+
+@database_common.connection_handler
+def search_questions(cursor,searched_question):
+    query = """
+    SELECT DISTINCT * FROM question
+    WHERE title ILIKE %(s_q)s OR message ILIKE %(s_q)s 
+    """
+    cursor.execute(query, {'s_q': f'%{searched_question}%'})
+    return cursor.fetchall()
+
+@database_common.connection_handler
+def search_answers(cursor, searched_answer):
+    query = """
+        SELECT DISTINCT question_id FROM answer 
+        WHERE  message ILIKE %(s_a)s
+        """
+    cursor.execute(query, {'s_a': f'%{searched_answer}%'})
+    return cursor.fetchall()

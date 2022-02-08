@@ -152,7 +152,19 @@ def add_comment_to_answer(answer_id):
         return redirect(url_for('display_answer', answer_id=answer_id))
     return render_template('add_new_comment_for_answers.html', id=answer_id)
 
-
+@app.route('/search')
+def search_questions():
+    searched_question = request.args.get("q")
+    if searched_question:
+        question_ids = data_manager.search_answers(searched_question)
+        details = data_manager.search_questions(searched_question)
+        details_ids = [x['id'] for x in details]
+        for id in question_ids:
+            if id['question_id'] not in details_ids:
+                details.append(data_manager.get_single_question(id['question_id'])[0])
+    else:
+        return redirect('/')
+    return render_template('searched_question.html', details=details)
 
 
 if __name__ == "__main__":

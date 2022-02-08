@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+
+{% block head %}
+    Question
+{% endblock head %}
+
+{% block body %}
+    <table>
+        <tr>
+            {% for key in details[0].keys() %}
+                <th>{{ key.capitalize().replace('_',' ') }}</th>
+            {% endfor %}
+        </tr>
+        {% for dict in details %}
+        <tr>
+            {% for key, value in dict.items() %}
+                <td>{{ value }}</td>
+            {% endfor %}
+                </tr>
+            {% endfor %}
+    </table>
+
+
+{% endblock body %}
