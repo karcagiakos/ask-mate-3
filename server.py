@@ -17,7 +17,7 @@ def show_main_page():
     return redirect("/list")
 
 @app.route("/list", methods=['GET', 'POST'])
-def list_questions(sort_by='submission_time'):
+def list_questions():
     data = data_manager.get_questions()
     return render_template('main_page.html', data=data)
 
@@ -89,9 +89,22 @@ def delete_answer(answer_id):
     return redirect('/')
 
 
-@app.route('/answer/<answer_id>/vote_down', methods=['GET', 'POST'])
 @app.route('/answer/<answer_id>/vote_up', methods=['GET', 'POST'])
-def vote_answer(answer_id):
+def vote_up_answer(answer_id):
+    pass
+
+
+
+@app.route('/answer/<int:answer_id>/vote_down', methods=['GET', 'POST'])
+def vote_down_answer(answer_id):
+    question_id = data_manager.display_answer(answer_id)[0]['question_id']
+    print(question_id)
+    vote_down = request.args.get('vote_down')
+    if vote_down:
+        data_manager.update_answer_vote(answer_id, -1)
+        return redirect(url_for('list_answers', id=question_id))
+    return render_template('display_answer.html', answer_id=answer_id)
+
     question_id = ''
     answers = connection.read_answers()
     if request.method == 'POST':

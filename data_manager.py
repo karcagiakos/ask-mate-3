@@ -78,11 +78,11 @@ def delete_answer_with_question(cursor, id):
 
 @database_common.connection_handler
 def delete_answer(cursor, id):
-    query = """
-    DELETE FROM answer
-    WHERE id = %(id)s
-    """
-    cursor.execute(query, {'id': id})
+     query = """
+     DELETE FROM answer
+     WHERE id = %(id)s
+     """
+     cursor.execute(query, {'id': id})
 
 
 @database_common.connection_handler
@@ -107,3 +107,12 @@ def delete_comment(cursor, id):
     DELETE FROM comment
     WHERE question_id = %(id)s OR answer_id = %(id)s    """
     cursor.execute(query, {'id': id})
+
+
+@database_common.connection_handler
+def update_answer_vote(cursor,id,amount):
+    query = """
+    UPDATE answer
+    SET vote_number = vote_number + %(amount)s
+    WHERE id = %(id)s"""
+    cursor.execute(query, {'id': id, 'amount': amount})

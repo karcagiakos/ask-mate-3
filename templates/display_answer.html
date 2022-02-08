@@ -7,12 +7,12 @@
  {% block body %}
 
 
-<form name="option" action="{{url_for('vote_answer', answer_id=answer_id)}}" method="post">
-    <input class="button button2" name="option" type="submit" value="UPVOTE">
+<form name="option" action="{{url_for('vote_up_answer', answer_id=answer_id)}}">
+    <input class="button button2" name="vote_up" type="submit" value="UPVOTE">
      </form>
            <h2>{{ answer[0]['message'] }}</h2>
-<form name="option" action="{{url_for('vote_answer', answer_id=answer_id)}}" method="post">
-<input class="button button2" name="option" type="submit" value="DOWNVOTE">
+<form name="option" action="{{url_for('vote_down_answer', answer_id=answer_id)}}" >
+<input class="button button2" name="vote_down" type="submit" value="DOWNVOTE">
          </form>
 <form name="delete_answer" method="post">
 <button  class="button button1" onclick="location.href='{{ url_for('delete_answer', answer_id=answer_id) }}'" type="button">
