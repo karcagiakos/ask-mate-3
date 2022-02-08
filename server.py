@@ -66,12 +66,6 @@ def edit_question(question_id):
 
 @app.route('/question/<question_id>/delete')
 def delete_question(question_id):
-    answer_ids = [x['id'] for x in data_manager.list_answers(question_id)]
-    data_manager.delete_comment(question_id)
-    for i in answer_ids:
-        data_manager.delete_comment(i)
-    data_manager.delete_answer_with_question(question_id)
-    data_manager.delete_question_tag(question_id)
     data_manager.delete_question(question_id)
     return redirect('/list')
 
@@ -84,11 +78,9 @@ def display_answer(answer_id):
 
 @app.route('/answer/<int:answer_id>/delete ', methods=['GET', 'POST'])
 def delete_answer(answer_id):
-    answer_ids = [x['id'] for x in data_manager.list_answers(answer_id)]
-    for i in answer_ids:
-        data_manager.delete_comment(i)
+    question_id = data_manager.display_answer(answer_id)[0]['question_id']
     data_manager.delete_answer(answer_id)
-    return redirect('/')
+    return redirect(url_for('list_answers', id=question_id))
 
 
 @app.route('/answer/<int:answer_id>/vote_up', methods=['GET', 'POST'])

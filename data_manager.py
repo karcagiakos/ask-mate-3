@@ -71,13 +71,7 @@ def update_question(cursor, data):
     """
     cursor.execute(query,data)
 
-@database_common.connection_handler
-def delete_answer_with_question(cursor, id):
-    query = """
-    DELETE FROM answer
-    WHERE question_id = %(id)s
-    """
-    cursor.execute(query, {'id': id})
+
 
 @database_common.connection_handler
 def delete_answer(cursor, id):
@@ -96,13 +90,7 @@ def delete_question(cursor, id):
     """
     cursor.execute(query, {'id': id})
 
-@database_common.connection_handler
-def delete_question_tag(cursor, id):
-    query = """
-    DELETE FROM question_tag
-    WHERE question_id = %(id)s
-    """
-    cursor.execute(query, {'id': id})
+
 
 @database_common.connection_handler
 def delete_comment(cursor, id):
