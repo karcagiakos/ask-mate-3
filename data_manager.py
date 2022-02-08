@@ -129,7 +129,7 @@ def update_view_number(cursor,id):
 @database_common.connection_handler
 def get_comments_for_questions(cursor,id):
     query= """
-    SELECT message,submission_time FROM comment WHERE question_id = %(id)s
+    SELECT message,submission_time, id FROM comment WHERE question_id = %(id)s
     """
     cursor.execute(query, {'id': id})
     return cursor.fetchall()
@@ -137,7 +137,7 @@ def get_comments_for_questions(cursor,id):
 @database_common.connection_handler
 def get_comments_for_answers(cursor,id):
     query= """
-    SELECT message,submission_time FROM comment WHERE answer_id = %(id)s
+    SELECT message,submission_time, id FROM comment WHERE answer_id = %(id)s
     """
     cursor.execute(query, {'id': id})
     return cursor.fetchall()

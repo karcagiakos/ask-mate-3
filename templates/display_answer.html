@@ -17,16 +17,23 @@
             <h2>There are no comments yet</h2>
         {% else %}
         {% for key in comments[0].keys() %}
+            {% if key != 'id' %}
+
      <th>{{ key.capitalize().replace('_', ' ') }}</th>
+            {% endif %}
      {% endfor  %}
+            <th>Edit comment</th>
          </tr>
         <tr>
         {% for dicts in comments %}
     </tr>
      {% for key, value in dicts.items() %}
+         {% if key != 'id' %}
         <td>{{  value }} </td>
+    {% endif %}
+     {% endfor %}
+            <td> <a href = "{{ url_for('edit_comment', comment_id=dicts['id']) }}"> Edit comment </a> </td >
 
-        {% endfor %}
         {% endfor %}
         {% endif  %}
         </table>

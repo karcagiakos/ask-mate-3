@@ -162,12 +162,18 @@ def search_questions():
 def edit_answer(answer_id):
     answers = data_manager.display_answer(answer_id)
     comments = data_manager.get_comments_for_answers(answer_id)
+    print(comments)
     if request.method == 'POST':
         # id = answers[0]['question_id']
         data_manager.update_answer(answer_id,request.form['message'])
         return redirect(url_for('list_answers', id=answers[0]['question_id']))
     return render_template('edit_answer.html', answer_id=answer_id, answer=answers, comments=comments )
 
+@app.route('/comment/<int:comment_id>/edit', methods=['GET', 'POST'])
+def edit_comment(comment_id):
+ # < td > < a href = "{{ url_for('edit_comment', comment_id=id) }}" > Edit comment < / a > < / td >
+
+    return render_template('edit_comment.html', id=comment_id)
 
 if __name__ == "__main__":
     app.run(
