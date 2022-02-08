@@ -2,13 +2,13 @@
 {% block head %}
 
 
-<form name="option" action="{{url_for('vote_question', question_id=id)}}" method="post">
-    <input class="button button2"  name="option" type="submit" value="UPVOTE">
+<form name="option" action="{{url_for('vote_up_question', question_id=id)}}">
+    <input class="button button2"  name="vote-up" type="submit" value="UPVOTE">
      </form>
            <h1>Title: {{ question[0]['title'] }}</h1>
 
-<form name="option" action="{{url_for('vote_question', question_id=id)}}" method="post">
-<input class="button button2" name="option" type="submit" value="DOWNVOTE">
+<form name="option" action="{{url_for('vote_down_question', question_id=id)}}" >
+<input class="button button2" name="vote-down" type="submit" value="DOWNVOTE">
          </form>
 
     <h1>Message: {{ question[0]['message'] }}</h1>

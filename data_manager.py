@@ -116,3 +116,12 @@ def update_answer_vote(cursor,id,amount):
     SET vote_number = vote_number + %(amount)s
     WHERE id = %(id)s"""
     cursor.execute(query, {'id': id, 'amount': amount})
+
+
+@database_common.connection_handler
+def update_question_vote(cursor,id,amount):
+    query = """
+    UPDATE question
+    SET vote_number = vote_number + %(amount)s
+    WHERE id = %(id)s"""
+    cursor.execute(query, {'id': id, 'amount': amount})

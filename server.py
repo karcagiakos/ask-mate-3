@@ -89,7 +89,7 @@ def delete_answer(answer_id):
     return redirect('/')
 
 
-@app.route('/answer/<answer_id>/vote_up', methods=['GET', 'POST'])
+@app.route('/answer/<int:answer_id>/vote_up', methods=['GET', 'POST'])
 def vote_up_answer(answer_id):
     question_id = data_manager.display_answer(answer_id)[0]['question_id']
     vote_up = request.args.get('vote_up')
@@ -109,40 +109,30 @@ def vote_down_answer(answer_id):
         return redirect(url_for('list_answers', id=question_id))
     return render_template('display_answer.html', answer_id=answer_id)
 
-    question_id = ''
-    answers = connection.read_answers()
-    if request.method == 'POST':
-        for dict in answers:
-            if dict['id'] == answer_id:
-                question_id += dict['question_id']
-                if request.form['option'] == 'UPVOTE':
-                    dict['vote_number'] = str(int(dict['vote_number'])+1)
-                    connection.write_answer(answers)
-                    return redirect(url_for('get_answers', id=question_id))
-                elif request.form['option'] == 'DOWNVOTE' \
-                                               '':
-                    dict['vote_number'] = str(int(dict['vote_number']) - 1)
-                    connection.write_answer(answers)
-                    return redirect(url_for('get_answers', id=question_id))
-    return render_template('display_answer.html', answer_id=answer_id)
 
 
-@app.route('/question/<question_id>/vote_up', methods=['GET', 'POST'])
-@app.route('/question/<question_id>/vote_down', methods=['GET', 'POST'])
-def vote_question(question_id):
-    questions = connection.read_questions()
-    if request.method == 'POST':
-        for dict in questions:
-            if dict['id'] == question_id:
-                if request.form['option'] == 'UPVOTE':
-                    dict['vote_number'] = int(dict['vote_number']) + 1
-                    connection.write_questions(questions)
-                    return redirect('/list')
-                elif request.form['option'] == 'DOWNVOTE':
-                    dict['vote_number'] = int(dict['vote_number']) - 1
-                    connection.write_questions(questions)
-                    return redirect('/list')
-    return render_template('display_question.html', question_id=question_id)
+
+@app.route('/question/<int:question_id>/vote_up', methods=['GET', 'POST'])
+def vote_up_question(question_id):
+    vote_up = request.args.get('vote-up')
+    answers = data_manager.list_answers(question_id)
+    question = data_manager.get_single_question(question_id)
+    if vote_up:
+        data_manager.update_question_vote(question_id, 1)
+        return redirect('/list')
+    return render_template('display_questions.html', id=question_id, question=question, answer=answers)
+
+
+@app.route('/question/<int:question_id>/vote_down', methods=['GET', 'POST'])
+def vote_down_question(question_id):
+    vote_down = request.args.get('vote-down')
+    answers = data_manager.list_answers(question_id)
+    question = data_manager.get_single_question(question_id)
+    if vote_down:
+        data_manager.update_question_vote(question_id, -1)
+        return redirect('/list')
+    return render_template('display_questions.html', id=question_id, question=question, answer=answers)
+
 
 
 
