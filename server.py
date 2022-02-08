@@ -1,5 +1,4 @@
 from flask import Flask, flash, render_template, redirect, request, url_for
-import connection
 import datetime
 from werkzeug.utils import secure_filename
 import os
@@ -25,8 +24,9 @@ def list_questions():
 def list_answers(id):
     answers = data_manager.list_answers(id)
     question = data_manager.get_single_question(id)
+    comments = data_manager.get_comments_for_questions(id)
     data_manager.update_view_number(id)
-    return render_template('display_questions.html', id=id, question=question, answer=answers)
+    return render_template('display_questions.html', id=id, question=question, answer=answers, comments=comments)
 
 @app.route("/questions/<int:id>/new-answer", methods=['GET', 'POST'])
 def add_new_answer(id):
@@ -134,7 +134,13 @@ def vote_down_question(question_id):
         return redirect('/list')
     return render_template('display_questions.html', id=question_id, question=question, answer=answers)
 
-
+@app.route('/question/<int:question_id>/new-comment', methods=['GET', 'POST'])
+def add_comment_to_question(question_id):
+    if request.method == 'POST':
+        data = [question_id,request.form['comment'],str(datetime.datetime.now()),0]
+        data_manager.add_new_comment_question(data)
+        return redirect(url_for('list_answers', id=question_id))
+    return render_template('add_new_comment.html', id=question_id)
 
 
 

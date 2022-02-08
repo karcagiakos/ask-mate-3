@@ -14,8 +14,37 @@
     <h1>Message: {{ question[0]['message'] }}</h1>
 {% endblock head %}
     {% block body %}
-        <button  class="button button1" onclick="location.href='/list'" type="button">
-         Back to the list</button><br>
+        <table>
+        <tr>
+        {% if comments|length < 1 %}
+            <h2>There are no comments yet</h2>
+        {% else %}
+        {% for key in comments[0].keys() %}
+     <th>{{ key.capitalize().replace('_', ' ') }}</th>
+     {% endfor  %}
+         </tr>
+        <tr>
+        {% for dicts in comments %}
+    </tr>
+     {% for key, value in dicts.items() %}
+        <td>{{  value }} </td>
+
+        {% endfor %}
+        {% endfor %}
+        {% endif  %}
+        </table>
+
+        <table>
+        <tr>
+            <td><button  class="button button2" onclick="location.href='{{url_for('edit_question', question_id=id)}}'" type="button">
+         Edit question</button><br></td>
+            <td><form  name="delete_question" method="post">
+    <button  class="button button2" onclick="location.href='{{ url_for('delete_question', question_id=id) }}'" type="button">
+        Delete Question</button></form></td><br>
+            <td> <button  class="button button2" onclick="location.href='{{url_for('add_comment_to_question', question_id=id)}}'" type="button">
+         Add a new comment</button><br></td>
+        </tr>
+        </table><br>
         <table width="100%">
     <tr>
     {% if answer|length < 1 %}
@@ -43,18 +72,13 @@
         {% endfor  %}
         {% endif %}
        </table>
-        <button  class="button button2" onclick="location.href='{{url_for('edit_question', question_id=id)}}'" type="button">
-         Edit question</button><br>
-        <button  class="button button2" onclick="location.href='{{url_for('add_new_answer', id=id)}}'" type="button">
+            <button  class="button button2" onclick="location.href='{{url_for('add_new_answer', id=id)}}'" type="button">
          Add a new answer</button><br>
 
-<form  name="delete_question" method="post">
-    <button  class="button button2" onclick="location.href='{{ url_for('delete_question', question_id=id) }}'" type="button">
-         Delete Question</button><br>
-
-</form>
 
 
 
 
+        <button  class="button button1" onclick="location.href='/list'" type="button">
+         Back to the list</button><br>
     {% endblock body %}

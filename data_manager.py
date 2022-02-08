@@ -1,5 +1,8 @@
 import database_common
+import psycopg2
 
+# psycopg2 module psycopg2.sql literal
+# psycopg2 module psycopg2.sql Idetifier
 
 @database_common.connection_handler
 def get_questions(cursor):
@@ -134,3 +137,19 @@ def update_view_number(cursor,id):
     SET view_number = view_number + 1
     WHERE id = %(id)s"""
     cursor.execute(query, {'id': id})
+
+@database_common.connection_handler
+def get_comments_for_questions(cursor,id):
+    query= """
+    SELECT message,submission_time FROM comment WHERE question_id = %(id)s
+    """
+    cursor.execute(query, {'id': id})
+    return cursor.fetchall()
+
+@database_common.connection_handler
+def add_new_comment_question(cursor, data):
+    query = """
+    INSERT INTO comment (question_id,message,submission_time, edited_count)
+    VALUES (%s,%s,%s,%s)
+    """
+    cursor.execute(query, data)
