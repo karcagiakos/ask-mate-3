@@ -20,20 +20,18 @@
  </section>
 
 
-<form action="/list" method="post">
+<form action="/list" >
     <label for="sorter">Choose how to sort</label>
     <select name="headers" id="sorter">
-        <option name="submission_time+" value="submission_time+">submission_time+</option>
-        <option name="submission_time-" value="submission_time-">submission_time-</option>
-        <option name="title+" value="title+">title+</option>
-        <option name="title-" value="title-">title-</option>
-        <option name="message+" value="message+">message+</option>
-        <option name="message-" value="message-">message-</option>
-        <option name="view_number+" value="view_number+">view_number+</option>
-        <option name="view_number-" value="view_number-">view_number-</option>
-        <option name="vote_number+" value="vote_number+">vote_number+</option>
-        <option name="vote_number-" value="vote_number-">vote_number-</option>
-
+        <option value="submission_time">Submission time</option>
+        <option value="title">Title</option>
+        <option value="message">Message</option>
+        <option value="view_number">View number</option>
+        <option value="vote_number">Vote number</option>
+        </select>
+    <select name="order">
+        <option value="ASC">ASC</option>
+        <option value="DESC">DESC</option>
         <input type="submit">
     </select>
 </form>

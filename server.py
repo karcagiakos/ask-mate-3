@@ -12,13 +12,29 @@ app.config['UPLOAD_FOLDER'] = '/static/images'
 
 @app.route("/", methods=['GET'])
 def show_main_page():
-    data = data_manager.last_five_questions()
+    order_by = request.args.get('headers')
+    sort = request.args.get('order')
+    data = data_manager.last_five_questions(order_by='submission_time')
+    if order_by and sort:
+        if sort == 'DESC':
+            data = data_manager.last_five_questions(order_by)[::-1]
+        else:
+            data = data_manager.last_five_questions(order_by)
     return render_template('main_page.html', data=data)
+
 
 @app.route("/list", methods=['GET', 'POST'])
 def list_questions():
     data = data_manager.get_questions()
+    order_by = request.args.get('headers')
+    sort = request.args.get('order')
+    if order_by and sort:
+        if sort == 'DESC':
+            data = data_manager.sort_questions(order_by)[::-1]
+        else:
+            data = data_manager.sort_questions(order_by)
     return render_template('main_page.html', data=data)
+
 
 @app.route("/questions/<int:id>", methods=['GET','POST'])
 def list_answers(id):
@@ -27,6 +43,7 @@ def list_answers(id):
     comments = data_manager.get_comments_for_questions(id)
     data_manager.update_view_number(id)
     return render_template('display_questions.html', id=id, question=question, answer=answers, comments=comments)
+
 
 @app.route("/questions/<int:id>/new-answer", methods=['GET', 'POST'])
 def add_new_answer(id):
@@ -53,6 +70,7 @@ def add_question():
         return redirect('/list')
     return render_template('add_question.html')
 
+
 @app.route('/question/<int:question_id>/edit', methods=['GET', 'POST'])
 def edit_question(question_id):
     question = data_manager.get_single_question(question_id)
@@ -75,6 +93,7 @@ def display_answer(answer_id):
     answers = data_manager.display_answer(answer_id)
     comments = data_manager.get_comments_for_answers(answer_id)
     return render_template('display_answer.html', answer_id=answer_id, answer=answers, comments=comments )
+
 
 @app.route('/answer/<int:answer_id>/delete ', methods=['GET', 'POST'])
 def delete_answer(answer_id):
@@ -126,6 +145,7 @@ def vote_down_question(question_id):
         data_manager.update_question_vote(question_id, -1)
         return redirect('/list')
     return render_template('display_questions.html', id=question_id, question=question, answer=answers)
+
 
 @app.route('/question/<int:question_id>/new-comment', methods=['GET', 'POST'])
 def add_comment_to_question(question_id):

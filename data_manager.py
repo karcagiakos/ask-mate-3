@@ -1,8 +1,7 @@
 import database_common
-import psycopg2
+from psycopg2 import sql
 
-# psycopg2 module psycopg2.sql literal
-# psycopg2 module psycopg2.sql Idetifier
+
 
 @database_common.connection_handler
 def get_questions(cursor):
@@ -13,12 +12,9 @@ def get_questions(cursor):
     return cursor.fetchall()
 
 @database_common.connection_handler
-def last_five_questions(cursor):
-    query = """
-    SELECT * FROM question ORDER BY submission_time DESC
-    LIMIT 5
-    """
-    cursor.execute(query)
+def last_five_questions(cursor, order_by):
+    cursor.execute(sql.SQL("SELECT * FROM question ORDER BY {order_by} LIMIT 5").
+           format(order_by=sql.Identifier(order_by)))
     return cursor.fetchall()
 
 
@@ -215,3 +211,10 @@ def update_comment(cursor, comment):
     SET message = (%s), submission_time = (%s), edited_count = edited_count + 1
     WHERE id = (%s)"""
     cursor.execute(query, comment)
+
+@database_common.connection_handler
+def sort_questions(cursor, order_by):
+    cursor.execute(sql.SQL("SELECT * FROM question ORDER BY {order_by}").
+                              format(order_by=sql.Identifier(order_by)))
+                                    # sort=sql.Literal(sort)))
+    return cursor.fetchall()
