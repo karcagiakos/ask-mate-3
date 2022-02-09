@@ -96,7 +96,7 @@ def delete_question(cursor, id):
 def delete_comment(cursor, id):
     query = """
     DELETE FROM comment
-    WHERE question_id = %(id)s OR answer_id = %(id)s    """
+    WHERE  id = %(id)s   """
     cursor.execute(query, {'id': id})
 
 
@@ -205,5 +205,3 @@ def update_comment(cursor, comment):
     SET message = (%s), submission_time = (%s), edited_count = edited_count + 1
     WHERE id = (%s)"""
     cursor.execute(query, comment)
-
-

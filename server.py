@@ -178,6 +178,12 @@ def edit_comment(comment_id):
 
     return render_template('edit_comment.html', comment_id=comment_id, comment=comment)
 
+@app.route('/comments/<int:comment_id>/delete', methods=['GET', 'POST'])
+def delete_comment(comment_id):
+    comment = data_manager.get_comment(comment_id)
+    data_manager.delete_comment(comment_id)
+    return redirect('/list')
+
 if __name__ == "__main__":
     app.run(
         #host = "192.168.1.100",
