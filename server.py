@@ -2,7 +2,6 @@ from flask import Flask, flash, render_template, redirect, request, url_for
 import datetime
 from werkzeug.utils import secure_filename
 import os
-
 import data_manager
 
 ALLOWED_EXTENSIONS = {'png', 'jpg'}
@@ -13,7 +12,8 @@ app.config['UPLOAD_FOLDER'] = '/static/images'
 
 @app.route("/", methods=['GET'])
 def show_main_page():
-    return redirect("/list")
+    data = data_manager.last_five_questions()
+    return render_template('main_page.html', data=data)
 
 @app.route("/list", methods=['GET', 'POST'])
 def list_questions():

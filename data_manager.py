@@ -13,6 +13,16 @@ def get_questions(cursor):
     return cursor.fetchall()
 
 @database_common.connection_handler
+def last_five_questions(cursor):
+    query = """
+    SELECT * FROM question ORDER BY submission_time DESC
+    LIMIT 5
+    """
+    cursor.execute(query)
+    return cursor.fetchall()
+
+
+@database_common.connection_handler
 def get_answers(cursor):
     query = """
     SELECT * FROM answer ORDER BY submission_time DESC
