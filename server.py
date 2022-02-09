@@ -171,18 +171,26 @@ def edit_answer(answer_id):
 @app.route('/comment/<int:comment_id>/edit', methods=['GET', 'POST'])
 def edit_comment(comment_id):
     comment = data_manager.get_comment(comment_id)
+    question_id = comment[0]['question_id']
+    answer_id = comment[0]['answer_id']
     if request.method == 'POST':
         data = [request.form['comment'], str(datetime.datetime.now()), comment[0]['id']]
         data_manager.update_comment(data)
-        return redirect('/list')
-
+        if question_id:
+            return redirect(url_for('list_answers', id=question_id))
+        return redirect(url_for('display_answer', answer_id=answer_id))
     return render_template('edit_comment.html', comment_id=comment_id, comment=comment)
 
 @app.route('/comments/<int:comment_id>/delete', methods=['GET', 'POST'])
 def delete_comment(comment_id):
     comment = data_manager.get_comment(comment_id)
+    question_id = comment[0]['question_id']
+    answer_id = comment[0]['answer_id']
     data_manager.delete_comment(comment_id)
-    return redirect('/list')
+    if not answer_id:
+        return redirect(url_for('list_answers', id=question_id))
+    else:
+        return redirect(url_for('display_answer', answer_id=answer_id))
 
 if __name__ == "__main__":
     app.run(
