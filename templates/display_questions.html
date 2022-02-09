@@ -30,8 +30,10 @@
         {% for dicts in comments %}
     </tr>
      {% for key, value in dicts.items() %}
-        {% if key != 'id' %}
-        <td> {{  value }} </td>
+        {% if key == 'edited_count' %}
+        <td> Edited {{ value }} times</td>
+          {% elif key != 'id' %}
+            <td>{{  value }} </td>
             {% endif %}
 
      {% endfor %}

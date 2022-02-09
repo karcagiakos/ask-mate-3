@@ -129,7 +129,7 @@ def update_view_number(cursor,id):
 @database_common.connection_handler
 def get_comments_for_questions(cursor,id):
     query= """
-    SELECT message,submission_time, id FROM comment WHERE question_id = %(id)s
+    SELECT message,submission_time, id, edited_count FROM comment WHERE question_id = %(id)s
     """
     cursor.execute(query, {'id': id})
     return cursor.fetchall()
@@ -137,7 +137,7 @@ def get_comments_for_questions(cursor,id):
 @database_common.connection_handler
 def get_comments_for_answers(cursor,id):
     query= """
-    SELECT message,submission_time, id FROM comment WHERE answer_id = %(id)s
+    SELECT message,submission_time, id, edited_count FROM comment WHERE answer_id = %(id)s
     """
     cursor.execute(query, {'id': id})
     return cursor.fetchall()
@@ -188,3 +188,22 @@ def update_answer(cursor,id,message):
     SET message = %(message)s
     WHERE id = %(id)s"""
     cursor.execute(query, {'id': id, 'message': message})
+
+@database_common.connection_handler
+def get_comment(cursor, id):
+    query = """
+    SELECT * 
+    FROM comment
+    WHERE id = %(id)s"""
+    cursor.execute(query, {'id':id})
+    return cursor.fetchall()
+
+@database_common.connection_handler
+def update_comment(cursor, comment):
+    query = """
+    UPDATE comment
+    SET message = (%s), submission_time = (%s), edited_count = edited_count + 1
+    WHERE id = (%s)"""
+    cursor.execute(query, comment)
+
+
