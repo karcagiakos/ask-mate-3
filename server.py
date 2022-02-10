@@ -3,6 +3,7 @@ import datetime
 from werkzeug.utils import secure_filename
 import os
 import data_manager
+from markupsafe import Markup
 
 ALLOWED_EXTENSIONS = {'png', 'jpg'}
 
@@ -40,13 +41,12 @@ def list_questions():
 def list_answers(id):
     # tags = [x['name'] for x in data_manager.get_question_id_with_tag_name(id)]
     tags = data_manager.get_question_id_with_tag_name(id)
-    for i in range(len(tags)):
-        print(tags[i]['id'])
     answers = data_manager.list_answers(id)
     question = data_manager.get_single_question(id)
     comments = data_manager.get_comments_for_questions(id)
     data_manager.update_view_number(id)
-    return render_template('display_questions.html', id=id, question=question, answer=answers, comments=comments, tags=tags)
+    answer_comments = data_manager.get_all_the_comments()
+    return render_template('display_questions.html', id=id, question=question, answer=answers, comments=comments, tags=tags, answer_comments=answer_comments)
 
 
 @app.route("/questions/<int:id>/new-answer", methods=['GET', 'POST'])
@@ -178,6 +178,18 @@ def search_questions():
         for id in question_ids:
             if id['question_id'] not in details_ids:
                 details.append(data_manager.get_single_question(id['question_id'])[0])
+
+        for dicts in details:
+            for key, value in dicts.items():
+                if key == 'title' or key == 'message':
+                    value = value.split()
+                    new = []
+                    for i in range(len(value)):
+                        if searched_question.lower() == value[i].lower():
+                            new.append(f'<mark>{searched_question}</mark>')
+                        else:
+                            new.append(value[i])
+                    dicts[key] = Markup(" ".join(new))
     else:
         return redirect('/')
     return render_template('searched_question.html', details=details)

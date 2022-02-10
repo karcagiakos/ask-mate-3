@@ -212,6 +212,16 @@ def update_comment(cursor, comment):
     WHERE id = (%s)"""
     cursor.execute(query, comment)
 
+
+@database_common.connection_handler
+def get_all_the_comments(cursor):
+    query ='''
+    SELECT *
+    FROM comment'''
+    cursor.execute(query)
+    return cursor.fetchall()
+
+
 @database_common.connection_handler
 def sort_questions(cursor, order_by):
     cursor.execute(sql.SQL("SELECT * FROM question ORDER BY {order_by}").

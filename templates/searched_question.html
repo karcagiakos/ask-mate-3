@@ -12,12 +12,13 @@
             {% endfor %}
         </tr>
         {% for dict in details %}
-        <tr>
+
             {% for key, value in dict.items() %}
-                <td>{{ value }}</td>
-            {% endfor %}
+                    <td>{{ value }}</td>
+        {% endfor %}
+    {% endfor %}
                 </tr>
-            {% endfor %}
+
     </table>
 
 

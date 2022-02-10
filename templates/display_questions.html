@@ -2,16 +2,12 @@
 {% block head %}
 
 
-<form name="option" action="{{url_for('vote_up_question', question_id=id)}}">
-    <input class="button button2"  name="vote-up" type="submit" value="UPVOTE">
-     </form>
-           <h1>Title: {{ question[0]['title'] }}</h1>
 
-<form name="option" action="{{url_for('vote_down_question', question_id=id)}}" >
-<input class="button button2" name="vote-down" type="submit" value="DOWNVOTE">
-         </form>
+           <h3>Title: {{ question[0]['title'] }}</h3>
 
-    <h1>Message: {{ question[0]['message'] }}</h1>
+
+
+    <h3>Message: {{ question[0]['message'] }}</h3>
 {% endblock head %}
 
     {% block body %}
@@ -62,8 +58,17 @@
          Add a new comment</button><br></td>
             <td>  <button  class="button button2" onclick="location.href='{{url_for('new_tag', question_id=id)}}'" type="button">
          Add new tag</button><br></td>
+            <td><form name="option" action="{{url_for('vote_up_question', question_id=id)}}">
+    <input class="button button2"  name="vote-up" type="submit" value="Upvote question">
+     </form></td>
+            <td><form name="option" action="{{url_for('vote_down_question', question_id=id)}}" >
+<input class="button button2" name="vote-down" type="submit" value="Downvote question">
+         </form></td>
         </tr>
         </table><br>
+
+
+
         <table width="100%">
     <tr>
     {% if answer|length < 1 %}
@@ -77,7 +82,7 @@
 
      </tr>
             {% for dicts in answer %}
-    </tr>
+
      {% for key, value in dicts.items() %}
             {% if key == 'message' %}
             <td><a  href="{{url_for('display_answer', answer_id=dicts['id'])}}">{{ value }}</a></td>
@@ -89,7 +94,41 @@
         <td>{{  value }} </td>
 
             {% endif %}
-            {% endfor  %}
+
+                {% endfor %}
+
+                <tr>
+
+
+                <table>
+                <tr>
+                    {% for key in answer_comments[0].keys() %}
+                        {% if key != 'id' and key != 'question_id'  %}
+                        <th>{{ key.capitalize().replace('_', ' ') }} </th>
+                        {% endif %}
+                        {% endfor %}
+                </tr>
+
+                <tr>{% for comment in answer_comments %}
+                    </tr>
+                        {% for key, value in comment.items()  %}
+                            {% if comment['answer_id'] == dicts['id'] %}
+                        {% if key != 'id' and key != 'question_id' %}
+                        <td> {{ value }}</td>
+                        {% endif %}
+                {% endif %}
+                 {% endfor %}
+                {% endfor %}
+
+
+
+                </tr>
+                </table>
+
+
+
+
+
         {% endfor  %}
         {% endif %}
        </table>
