@@ -2,6 +2,7 @@ import database_common
 from psycopg2 import sql
 from markupsafe import Markup
 
+
 def markup(searched_question,details):
     for dicts in details:
         for key, value in dicts.items():
@@ -17,8 +18,6 @@ def markup(searched_question,details):
     return details
 
 
-
-
 @database_common.connection_handler
 def get_questions(cursor):
     query = """
@@ -26,6 +25,7 @@ def get_questions(cursor):
     """
     cursor.execute(query)
     return cursor.fetchall()
+
 
 @database_common.connection_handler
 def last_five_questions(cursor, order_by):
@@ -42,14 +42,17 @@ def get_answers(cursor):
     cursor.execute(query)
     return cursor.fetchall()
 
+
 @database_common.connection_handler
 def list_answers(cursor, id):
     query = """
     SELECT * FROM answer 
     WHERE question_id = %(id)s
+    ORDER BY vote_number DESC
     """
     cursor.execute(query, {'id': id})
     return cursor.fetchall()
+
 
 @database_common.connection_handler
 def display_answer(cursor, id):
@@ -60,6 +63,7 @@ def display_answer(cursor, id):
     cursor.execute(query, {'id': id})
     return cursor.fetchall()
 
+
 @database_common.connection_handler
 def get_single_question(cursor, id):
     query = """
@@ -67,6 +71,7 @@ def get_single_question(cursor, id):
     """
     cursor.execute(query, {'id': id})
     return cursor.fetchall()
+
 
 @database_common.connection_handler
 def add_new_answer(cursor, data):
@@ -76,6 +81,7 @@ def add_new_answer(cursor, data):
     """
     cursor.execute(query, data)
 
+
 @database_common.connection_handler
 def add_new_question(cursor, data):
     query = """
@@ -83,6 +89,7 @@ def add_new_question(cursor, data):
     VALUES (%s,%s,%s,%s,%s,%s)
     """
     cursor.execute(query, data)
+
 
 @database_common.connection_handler
 def update_question(cursor, data):
@@ -92,7 +99,6 @@ def update_question(cursor, data):
     WHERE id = %s
     """
     cursor.execute(query,data)
-
 
 
 @database_common.connection_handler
@@ -111,7 +117,6 @@ def delete_question(cursor, id):
     WHERE id = %(id)s
     """
     cursor.execute(query, {'id': id})
-
 
 
 @database_common.connection_handler
@@ -148,6 +153,7 @@ def update_view_number(cursor,id):
     WHERE id = %(id)s"""
     cursor.execute(query, {'id': id})
 
+
 @database_common.connection_handler
 def get_comments_for_questions(cursor,id):
     query= """
@@ -155,6 +161,7 @@ def get_comments_for_questions(cursor,id):
     """
     cursor.execute(query, {'id': id})
     return cursor.fetchall()
+
 
 @database_common.connection_handler
 def get_comments_for_answers(cursor,id):
@@ -192,6 +199,7 @@ def search_questions(cursor,searched_question):
     cursor.execute(query, {'s_q': f'%{searched_question}%'})
     return cursor.fetchall()
 
+
 @database_common.connection_handler
 def search_answers(cursor, searched_answer):
     query = """
@@ -202,7 +210,6 @@ def search_answers(cursor, searched_answer):
     return cursor.fetchall()
 
 
-
 @database_common.connection_handler
 def update_answer(cursor,id,message):
     query = """
@@ -210,6 +217,7 @@ def update_answer(cursor,id,message):
     SET message = %(message)s
     WHERE id = %(id)s"""
     cursor.execute(query, {'id': id, 'message': message})
+
 
 @database_common.connection_handler
 def get_comment(cursor, id):
@@ -219,6 +227,7 @@ def get_comment(cursor, id):
     WHERE id = %(id)s"""
     cursor.execute(query, {'id':id})
     return cursor.fetchall()
+
 
 @database_common.connection_handler
 def update_comment(cursor, comment):
@@ -233,7 +242,7 @@ def update_comment(cursor, comment):
 def get_all_the_comments(cursor):
     query ='''
     SELECT *
-    FROM comment'''
+    FROM comment ORDER BY submission_time'''
     cursor.execute(query)
     return cursor.fetchall()
 
@@ -254,6 +263,7 @@ def get_tag(cursor):
     cursor.execute(query)
     return cursor.fetchall()
 
+
 @database_common.connection_handler
 def add_tag(cursor, tag):
     query = """
@@ -261,9 +271,11 @@ def add_tag(cursor, tag):
     VALUES (%(tag)s) ON CONFLICT DO NOTHING"""
     cursor.execute(query, {'tag':tag})
 
+
 @database_common.connection_handler
 def delete_tag(cursor, tag):
     pass
+
 
 @database_common.connection_handler
 def add_tag_question(cursor, data):
@@ -271,6 +283,7 @@ def add_tag_question(cursor, data):
     INSERT INTO question_tag (question_id, tag_id)
     VALUES (%s, %s) ON CONFLICT DO NOTHING"""
     cursor.execute(query, data)
+
 
 @database_common.connection_handler
 def get_question_id_with_tag_name(cursor, question_id):

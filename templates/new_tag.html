@@ -24,4 +24,7 @@
         </datalist>
     <button type="submit">Submit </button>
     </form>
+
+    <button  class="button button1" onclick="location.href='{{ url_for('list_answers', id= question_id) }}'" type="button">
+         Back to the question</button><br>
 {% endblock body %}

@@ -7,7 +7,7 @@
 {% block body %}
 
  {% for j in range(details|length) %}
-<table>
+<table width="100%">
         <tr>
             {% for key in details[0].keys() %}
                 <th>{{ key.capitalize().replace('_',' ') }}</th>

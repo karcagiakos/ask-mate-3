@@ -3,7 +3,7 @@ import datetime
 from werkzeug.utils import secure_filename
 import os
 import data_manager
-from markupsafe import Markup
+
 
 ALLOWED_EXTENSIONS = {'png', 'jpg'}
 
@@ -43,10 +43,16 @@ def list_answers(id):
     tags = data_manager.get_question_id_with_tag_name(id)
     answers = data_manager.list_answers(id)
     question = data_manager.get_single_question(id)
-    comments = data_manager.get_comments_for_questions(id)
-    data_manager.update_view_number(id)
     answer_comments = data_manager.get_all_the_comments()
-    return render_template('display_questions.html', id=id, question=question, answer=answers, comments=comments, tags=tags, answer_comments=answer_comments)
+    comments = data_manager.get_comments_for_questions(id)
+    answer_ids = [x['id'] for x in answers]
+    comment_ids = set([x['answer_id'] for x in answer_comments])
+    # print(answer_ids)
+    print(answers)
+    # print(comment_ids)
+    data_manager.update_view_number(id)
+
+    return render_template('teszt.html', comment_ids=comment_ids, id=id, question=question, answer=answers, comments=comments, tags=tags, answer_comments=answer_comments, answer_ids=answer_ids)
 
 
 @app.route("/questions/<int:id>/new-answer", methods=['GET', 'POST'])
@@ -85,7 +91,6 @@ def edit_question(question_id):
     return render_template('edit_question.html', question_id=question_id, question=question)
 
 
-
 @app.route('/question/<question_id>/delete')
 def delete_question(question_id):
     data_manager.delete_question(question_id)
@@ -113,8 +118,6 @@ def vote_up_answer(answer_id):
     if vote_up:
         data_manager.update_answer_vote(answer_id, 1)
         return redirect(url_for('list_answers', id=question_id))
-    return render_template('display_answer.html', answer_id=answer_id)
-
 
 
 @app.route('/answer/<int:answer_id>/vote_down', methods=['GET', 'POST'])
@@ -124,9 +127,6 @@ def vote_down_answer(answer_id):
     if vote_down:
         data_manager.update_answer_vote(answer_id, -1)
         return redirect(url_for('list_answers', id=question_id))
-    return render_template('display_answer.html', answer_id=answer_id)
-
-
 
 
 @app.route('/question/<int:question_id>/vote_up', methods=['GET', 'POST'])
@@ -168,6 +168,7 @@ def add_comment_to_answer(answer_id):
         return redirect(url_for('display_answer', answer_id=answer_id))
     return render_template('add_new_comment_for_answers.html', id=answer_id)
 
+
 @app.route('/search')
 def search_questions():
     searched_question = request.args.get("q")
@@ -181,9 +182,11 @@ def search_questions():
                 details.append(data_manager.get_single_question(id)[0])
         data_manager.markup(searched_question,details)
         data_manager.markup(searched_question,answers)
+        print(details)
     else:
         return redirect('/')
     return render_template('searched_question.html', details=details, answers=answers)
+
 
 @app.route('/answer/<int:answer_id>/edit', methods=['GET', 'POST'])
 def edit_answer(answer_id):
@@ -193,6 +196,7 @@ def edit_answer(answer_id):
         data_manager.update_answer(answer_id,request.form['message'])
         return redirect(url_for('list_answers', id=answers[0]['question_id']))
     return render_template('edit_answer.html', answer_id=answer_id, answer=answers, comments=comments )
+
 
 @app.route('/comment/<int:comment_id>/edit', methods=['GET', 'POST'])
 def edit_comment(comment_id):
@@ -207,6 +211,7 @@ def edit_comment(comment_id):
         return redirect(url_for('display_answer', answer_id=answer_id))
     return render_template('edit_comment.html', comment_id=comment_id, comment=comment)
 
+
 @app.route('/comments/<int:comment_id>/delete', methods=['GET', 'POST'])
 def delete_comment(comment_id):
     comment = data_manager.get_comment(comment_id)
@@ -217,6 +222,7 @@ def delete_comment(comment_id):
         return redirect(url_for('list_answers', id=question_id))
     else:
         return redirect(url_for('display_answer', answer_id=answer_id))
+
 
 @app.route('/question/<int:question_id>/new-tag', methods = ['GET', 'POST'])
 def new_tag(question_id):
@@ -230,12 +236,12 @@ def new_tag(question_id):
         data_manager.add_tag_question([question_id, tag_id[0]])
     return render_template('new_tag.html', question_id=question_id, tags=tags)
 
+
 @app.route('/question/<int:question_id>/tag/<int:tag_id>/delete')
 def delete_tag(question_id,tag_id):
     ids = [question_id, tag_id]
     data_manager.delete_tag_from_question(ids)
     return redirect(url_for('list_answers', id=question_id))
-
 
 
 if __name__ == "__main__":
