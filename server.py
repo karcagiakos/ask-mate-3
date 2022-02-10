@@ -165,21 +165,16 @@ def search_questions():
     searched_question = request.args.get("q")
     if searched_question:
         answers = data_manager.search_answers(searched_question)
-        print(answers)
         question_ids = set(x['question_id'] for x in data_manager.search_answers(searched_question))
         answer_ids = [x['id'] for x in answers]
-        print(answer_ids)
-        print(question_ids)
         details = data_manager.search_questions(searched_question)
         details_ids = [x['id'] for x in details]
-        print(details_ids)
         for id in question_ids:
             if id not in details_ids:
                 details.append(data_manager.get_single_question(id)[0])
         data_manager.markup(searched_question,details)
         data_manager.markup(searched_question,answers)
         ids_we_need = [x['id'] for x in details]
-        print(ids_we_need)
     else:
         return redirect('/')
     return render_template('searched_question.html', answer_ids=answer_ids, question_ids=question_ids, details=details, answers=answers, details_ids=ids_we_need)

@@ -6,6 +6,13 @@
 
 {% block body %}
 
+     <section class="search">
+        <h3>Search for questions</h3>
+    <form action="/search">
+        <input name="q" type="text"><br>
+        <button type="submit">Search</button>
+    </form>
+ </section>
 
 
  {% for j in range(details|length) %}
