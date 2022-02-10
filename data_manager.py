@@ -304,3 +304,11 @@ def delete_tag_from_question(cursor, ids):
     DELETE FROM question_tag
     WHERE question_id = (%s) AND tag_id = (%s)"""
     cursor.execute(query, ids)
+
+@database_common.connection_handler
+def get_question_id_by_answer_id(cursor,answer_id):
+    query='''
+    SELECT question_id FROM answer
+    WHERE id= %(a_i)s'''
+    cursor.execute(query, {'a_i':answer_id})
+    return cursor.fetchall()

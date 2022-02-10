@@ -1,10 +1,12 @@
 {% extends "layout.html" %}
 
 {% block head %}
-    Question
+    <h2>Search Result</h2>
 {% endblock head %}
 
 {% block body %}
+
+
 
  {% for j in range(details|length) %}
 <table width="100%">
@@ -29,12 +31,16 @@
 
      <table>
 
-
-<tr>
+ {% if details_ids[j] in question_ids %}
+            <tr>
             {% for key in answers[0].keys() %}
-                <th>{{ key.capitalize().replace('_',' ') }}</th>
+                <th>{{ key.capitalize().replace('_',' ') }} </th>
+
             {% endfor %}
-        </tr>
+            </tr>
+        {% else %}
+            <h5> </h5>
+           {% endif %}
      {% for dicts in answers %}
          {% if details[j]['id'] == dicts['question_id']%}
      <tr>
@@ -51,4 +57,6 @@
 
 
 {% endfor %}
+     <button  class="button button1" onclick="location.href='/list'" type="button">
+         Back to the list</button><br>
 {% endblock body %}

@@ -47,12 +47,9 @@ def list_answers(id):
     comments = data_manager.get_comments_for_questions(id)
     answer_ids = [x['id'] for x in answers]
     comment_ids = set([x['answer_id'] for x in answer_comments])
-    # print(answer_ids)
-    print(answers)
-    # print(comment_ids)
     data_manager.update_view_number(id)
 
-    return render_template('teszt.html', comment_ids=comment_ids, id=id, question=question, answer=answers, comments=comments, tags=tags, answer_comments=answer_comments, answer_ids=answer_ids)
+    return render_template('display_questions.html', comment_ids=comment_ids, question_id=id, id=id, question=question, answer=answers, comments=comments, tags=tags, answer_comments=answer_comments, answer_ids=answer_ids)
 
 
 @app.route("/questions/<int:id>/new-answer", methods=['GET', 'POST'])
@@ -95,13 +92,6 @@ def edit_question(question_id):
 def delete_question(question_id):
     data_manager.delete_question(question_id)
     return redirect('/list')
-
-
-@app.route('/answer/<int:answer_id>/', methods=['GET', 'POST'])
-def display_answer(answer_id):
-    answers = data_manager.display_answer(answer_id)
-    comments = data_manager.get_comments_for_answers(answer_id)
-    return render_template('display_answer.html', answer_id=answer_id, answer=answers, comments=comments )
 
 
 @app.route('/answer/<int:answer_id>/delete ', methods=['GET', 'POST'])
@@ -162,11 +152,12 @@ def add_comment_to_question(question_id):
 
 @app.route('/answer/<int:answer_id>/new-comment', methods=['GET','POST'])
 def add_comment_to_answer(answer_id):
+    question_id = data_manager.display_answer(answer_id)[0]['question_id']
     if request.method == 'POST':
         data = [answer_id,request.form['comment'], str(datetime.datetime.now()),0]
         data_manager.add_new_comment_answer(data)
-        return redirect(url_for('display_answer', answer_id=answer_id))
-    return render_template('add_new_comment_for_answers.html', id=answer_id)
+        return redirect(url_for('list_answers', id=question_id))
+    return render_template('add_new_comment_for_answers.html', answer_id=answer_id, question_id=question_id)
 
 
 @app.route('/search')
@@ -174,18 +165,24 @@ def search_questions():
     searched_question = request.args.get("q")
     if searched_question:
         answers = data_manager.search_answers(searched_question)
+        print(answers)
         question_ids = set(x['question_id'] for x in data_manager.search_answers(searched_question))
+        answer_ids = [x['id'] for x in answers]
+        print(answer_ids)
+        print(question_ids)
         details = data_manager.search_questions(searched_question)
         details_ids = [x['id'] for x in details]
+        print(details_ids)
         for id in question_ids:
             if id not in details_ids:
                 details.append(data_manager.get_single_question(id)[0])
         data_manager.markup(searched_question,details)
         data_manager.markup(searched_question,answers)
-        print(details)
+        ids_we_need = [x['id'] for x in details]
+        print(ids_we_need)
     else:
         return redirect('/')
-    return render_template('searched_question.html', details=details, answers=answers)
+    return render_template('searched_question.html', answer_ids=answer_ids, question_ids=question_ids, details=details, answers=answers, details_ids=ids_we_need)
 
 
 @app.route('/answer/<int:answer_id>/edit', methods=['GET', 'POST'])
@@ -206,9 +203,9 @@ def edit_comment(comment_id):
     if request.method == 'POST':
         data = [request.form['comment'], str(datetime.datetime.now()), comment[0]['id']]
         data_manager.update_comment(data)
-        if question_id:
-            return redirect(url_for('list_answers', id=question_id))
-        return redirect(url_for('display_answer', answer_id=answer_id))
+        if not question_id:
+            question_id = data_manager.get_question_id_by_answer_id(answer_id)[0]['question_id']
+        return redirect(url_for('list_answers', id=question_id))
     return render_template('edit_comment.html', comment_id=comment_id, comment=comment)
 
 
@@ -218,10 +215,9 @@ def delete_comment(comment_id):
     question_id = comment[0]['question_id']
     answer_id = comment[0]['answer_id']
     data_manager.delete_comment(comment_id)
-    if not answer_id:
-        return redirect(url_for('list_answers', id=question_id))
-    else:
-        return redirect(url_for('display_answer', answer_id=answer_id))
+    if not question_id:
+        question_id = data_manager.get_question_id_by_answer_id(answer_id)[0]['question_id']
+    return redirect(url_for('list_answers', id=question_id))
 
 
 @app.route('/question/<int:question_id>/new-tag', methods = ['GET', 'POST'])
