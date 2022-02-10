@@ -5,21 +5,50 @@
 {% endblock head %}
 
 {% block body %}
-    <table>
+
+ {% for j in range(details|length) %}
+<table>
         <tr>
             {% for key in details[0].keys() %}
                 <th>{{ key.capitalize().replace('_',' ') }}</th>
             {% endfor %}
         </tr>
-        {% for dict in details %}
 
-            {% for key, value in dict.items() %}
-                    <td>{{ value }}</td>
-        {% endfor %}
-    {% endfor %}
+
+            <tr>
+        {% for key, value in details[j].items() %}
+
+
+                <td>{{ value }}</td>
+                {% endfor %}
                 </tr>
 
-    </table>
+
+</table>
 
 
+     <table>
+
+
+<tr>
+            {% for key in answers[0].keys() %}
+                <th>{{ key.capitalize().replace('_',' ') }}</th>
+            {% endfor %}
+        </tr>
+     {% for dicts in answers %}
+         {% if details[j]['id'] == dicts['question_id']%}
+     <tr>
+        {%  for key, value in dicts.items() %}
+            <td>{{ value }}</td>
+                {% endfor %}
+                </tr>
+
+         {% endif %}
+ {% endfor %}
+
+
+     </table>
+
+
+{% endfor %}
 {% endblock body %}

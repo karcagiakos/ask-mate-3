@@ -12,7 +12,16 @@
 
     <form action={{url_for('new_tag', question_id = question_id)}} method="post">
     <label>Add a new tag</label>
-    <input type="text" name="tag">
+    <input type="text" name="tag" list="tags">
+        <datalist id="tags">
+            {% for dicts in tags %}
+                {% for key, value in dicts.items() %}
+                    {% if key == 'name' %}
+                <option value="{{ value }}">
+                    {% endif %}
+                    {% endfor %}
+            {% endfor %}
+        </datalist>
     <button type="submit">Submit </button>
     </form>
 {% endblock body %}

@@ -172,12 +172,13 @@ def add_comment_to_answer(answer_id):
 def search_questions():
     searched_question = request.args.get("q")
     if searched_question:
-        question_ids = data_manager.search_answers(searched_question)
+        answers = data_manager.search_answers(searched_question)
+        question_ids = set(x['question_id'] for x in data_manager.search_answers(searched_question))
         details = data_manager.search_questions(searched_question)
         details_ids = [x['id'] for x in details]
         for id in question_ids:
-            if id['question_id'] not in details_ids:
-                details.append(data_manager.get_single_question(id['question_id'])[0])
+            if id not in details_ids:
+                details.append(data_manager.get_single_question(id)[0])
 
         for dicts in details:
             for key, value in dicts.items():
@@ -192,7 +193,7 @@ def search_questions():
                     dicts[key] = Markup(" ".join(new))
     else:
         return redirect('/')
-    return render_template('searched_question.html', details=details)
+    return render_template('searched_question.html', details=details, answers=answers)
 
 @app.route('/answer/<int:answer_id>/edit', methods=['GET', 'POST'])
 def edit_answer(answer_id):
@@ -230,13 +231,14 @@ def delete_comment(comment_id):
 @app.route('/question/<int:question_id>/new-tag', methods = ['GET', 'POST'])
 def new_tag(question_id):
     names = [x['name'] for x in data_manager.get_tag()]
+    tags = data_manager.get_tag()
     if request.method == 'POST':
         if request.form['tag'] not in names:
             tag = request.form['tag']
             data_manager.add_tag(tag)
         tag_id = [x['id'] for x in data_manager.get_tag() if x['name'] == request.form['tag']]
         data_manager.add_tag_question([question_id, tag_id[0]])
-    return render_template('new_tag.html', question_id=question_id)
+    return render_template('new_tag.html', question_id=question_id, tags=tags)
 
 @app.route('/question/<int:question_id>/tag/<int:tag_id>/delete')
 def delete_tag(question_id,tag_id):

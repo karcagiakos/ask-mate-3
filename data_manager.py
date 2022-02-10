@@ -179,7 +179,7 @@ def search_questions(cursor,searched_question):
 @database_common.connection_handler
 def search_answers(cursor, searched_answer):
     query = """
-        SELECT DISTINCT question_id FROM answer 
+        SELECT * FROM answer 
         WHERE  message ILIKE %(s_a)s
         """
     cursor.execute(query, {'s_a': f'%{searched_answer}%'})
