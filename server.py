@@ -179,18 +179,8 @@ def search_questions():
         for id in question_ids:
             if id not in details_ids:
                 details.append(data_manager.get_single_question(id)[0])
-
-        for dicts in details:
-            for key, value in dicts.items():
-                if key == 'title' or key == 'message':
-                    value = value.split()
-                    new = []
-                    for i in range(len(value)):
-                        if searched_question.lower() == value[i].lower():
-                            new.append(f'<mark>{searched_question}</mark>')
-                        else:
-                            new.append(value[i])
-                    dicts[key] = Markup(" ".join(new))
+        data_manager.markup(searched_question,details)
+        data_manager.markup(searched_question,answers)
     else:
         return redirect('/')
     return render_template('searched_question.html', details=details, answers=answers)

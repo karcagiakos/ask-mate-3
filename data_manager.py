@@ -1,5 +1,21 @@
 import database_common
 from psycopg2 import sql
+from markupsafe import Markup
+
+def markup(searched_question,details):
+    for dicts in details:
+        for key, value in dicts.items():
+            if key == 'title' or key == 'message':
+                value = value.split()
+                new = []
+                for i in range(len(value)):
+                    if searched_question.lower() == value[i].lower():
+                        new.append(f'<mark>{searched_question}</mark>')
+                    else:
+                        new.append(value[i])
+                dicts[key] = Markup(" ".join(new))
+    return details
+
 
 
 
