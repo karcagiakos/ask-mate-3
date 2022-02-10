@@ -218,3 +218,50 @@ def sort_questions(cursor, order_by):
                               format(order_by=sql.Identifier(order_by)))
                                     # sort=sql.Literal(sort)))
     return cursor.fetchall()
+
+
+@database_common.connection_handler
+def get_tag(cursor):
+    query = """
+    SELECT *
+    FROM tag"""
+    cursor.execute(query)
+    return cursor.fetchall()
+
+@database_common.connection_handler
+def add_tag(cursor, tag):
+    query = """
+    INSERT INTO tag (name)
+    VALUES (%(tag)s) ON CONFLICT DO NOTHING"""
+    cursor.execute(query, {'tag':tag})
+
+@database_common.connection_handler
+def delete_tag(cursor, tag):
+    pass
+
+@database_common.connection_handler
+def add_tag_question(cursor, data):
+    query = """
+    INSERT INTO question_tag (question_id, tag_id)
+    VALUES (%s, %s) ON CONFLICT DO NOTHING"""
+    cursor.execute(query, data)
+
+@database_common.connection_handler
+def get_question_id_with_tag_name(cursor, question_id):
+    query = '''SELECT tag.name,tag.id,question_tag.question_id
+    FROM question
+    JOIN question_tag
+    ON question.id = question_tag.question_id
+    JOIN tag
+    ON tag.id = question_tag.tag_id
+    WHERE question_id = %(q_i)s'''
+    cursor.execute(query, {'q_i': question_id})
+    return cursor.fetchall()
+
+
+@database_common.connection_handler
+def delete_tag_from_question(cursor, ids):
+    query = """
+    DELETE FROM question_tag
+    WHERE question_id = (%s) AND tag_id = (%s)"""
+    cursor.execute(query, ids)

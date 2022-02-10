@@ -38,11 +38,15 @@ def list_questions():
 
 @app.route("/questions/<int:id>", methods=['GET','POST'])
 def list_answers(id):
+    # tags = [x['name'] for x in data_manager.get_question_id_with_tag_name(id)]
+    tags = data_manager.get_question_id_with_tag_name(id)
+    for i in range(len(tags)):
+        print(tags[i]['id'])
     answers = data_manager.list_answers(id)
     question = data_manager.get_single_question(id)
     comments = data_manager.get_comments_for_questions(id)
     data_manager.update_view_number(id)
-    return render_template('display_questions.html', id=id, question=question, answer=answers, comments=comments)
+    return render_template('display_questions.html', id=id, question=question, answer=answers, comments=comments, tags=tags)
 
 
 @app.route("/questions/<int:id>/new-answer", methods=['GET', 'POST'])
@@ -182,7 +186,6 @@ def search_questions():
 def edit_answer(answer_id):
     answers = data_manager.display_answer(answer_id)
     comments = data_manager.get_comments_for_answers(answer_id)
-    print(comments)
     if request.method == 'POST':
         data_manager.update_answer(answer_id,request.form['message'])
         return redirect(url_for('list_answers', id=answers[0]['question_id']))
@@ -212,9 +215,27 @@ def delete_comment(comment_id):
     else:
         return redirect(url_for('display_answer', answer_id=answer_id))
 
+@app.route('/question/<int:question_id>/new-tag', methods = ['GET', 'POST'])
+def new_tag(question_id):
+    names = [x['name'] for x in data_manager.get_tag()]
+    if request.method == 'POST':
+        if request.form['tag'] not in names:
+            tag = request.form['tag']
+            data_manager.add_tag(tag)
+        tag_id = [x['id'] for x in data_manager.get_tag() if x['name'] == request.form['tag']]
+        data_manager.add_tag_question([question_id, tag_id[0]])
+    return render_template('new_tag.html', question_id=question_id)
+
+@app.route('/question/<int:question_id>/tag/<int:tag_id>/delete')
+def delete_tag(question_id,tag_id):
+    ids = [question_id, tag_id]
+    data_manager.delete_tag_from_question(ids)
+    return redirect(url_for('list_answers', id=question_id))
+
+
+
 if __name__ == "__main__":
     app.run(
         #host = "192.168.1.100",
         debug = True,
-        port = 2000
-    )
+        port = 2000)
