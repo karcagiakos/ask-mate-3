@@ -84,9 +84,14 @@
 
             <tr>
         {% for key, value in answer[j].items() %}
+                {% if key == 'image' %}
+
+    <td><a id="{{ answer['id'] }}" href="/static/images/{{ answer[j]['image'] }}"><img
+            src="/static/images/{{ answer[j]['image'] }}" height="30"></a></td>
+                {% else %}
 
                 <td>{{ value }}</td>
-
+{% endif %}
                 {% endfor %}
                 <td><button  onclick="location.href='{{ url_for('delete_answer', answer_id=answer[j]['id']) }}'" type="button"> Delete Answer</button></td>
             <td>
@@ -106,7 +111,7 @@
 </table>
 
 
-           <table>
+           <table width="60%">
            {% if answer_ids[j] in comment_ids %}
             <tr>
             {% for key in answer_comments[0].keys() %}
@@ -117,7 +122,7 @@
                 <th>Delete comment</th>
         </tr>
          {% else %}
-            <h5>no com</h5>
+            <h5>No comments yet</h5>
            {% endif %}
      {% for dicts in answer_comments %}
          {% if answer[j]['id'] == dicts['answer_id']%}

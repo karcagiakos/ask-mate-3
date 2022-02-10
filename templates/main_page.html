@@ -55,10 +55,10 @@
     {% elif key == 'submission_time' %}
        <td> {{ value }} </td>
     {% elif key == 'image' %}
-    {% if value != '0' %}
+
     <td><a id="{{ dicts['id'] }}" href="/static/images/{{ dicts['image'] }}"><img
             src="/static/images/{{ dicts['image'] }}" height="30"></a></td>
-    {% endif %}
+
     {% else %}
     <td>{{ value }}</td>
     {% endif %}

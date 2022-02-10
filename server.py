@@ -27,6 +27,7 @@ def show_main_page():
 @app.route("/list", methods=['GET', 'POST'])
 def list_questions():
     data = data_manager.get_questions()
+    print(data)
     order_by = request.args.get('headers')
     sort = request.args.get('order')
     if order_by and sort:
@@ -45,6 +46,7 @@ def list_answers(id):
     question = data_manager.get_single_question(id)
     answer_comments = data_manager.get_all_the_comments()
     comments = data_manager.get_comments_for_questions(id)
+    print(answers)
     answer_ids = [x['id'] for x in answers]
     comment_ids = set([x['answer_id'] for x in answer_comments])
     data_manager.update_view_number(id)
