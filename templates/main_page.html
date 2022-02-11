@@ -15,12 +15,12 @@
         <h3>Search for questions</h3>
     <form action="/search">
         <input name="q" type="text"><br>
-        <button type="submit">Search</button>
+        <button id="but" type="submit">Search</button>
     </form>
  </section>
 
 
-<form action="/list" >
+<form  action="/list" >
     <label for="sorter">Choose how to sort</label>
     <select name="headers" id="sorter">
         <option value="submission_time">Submission time</option>
@@ -32,11 +32,11 @@
     <select name="order">
         <option value="ASC">ASC</option>
         <option value="DESC">DESC</option>
-        <input type="submit">
+        <input id="but" type="submit">
     </select>
 </form>
 
-     <button type=""><a href = "/list">Show all results</a></button>
+     <button id="but" type=""><a href = "/list">Show all results</a></button>
 
 <table>
     <tr>
