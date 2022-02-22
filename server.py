@@ -1,4 +1,4 @@
-from flask import Flask, flash, render_template, redirect, request, url_for
+from flask import Flask, flash, render_template, redirect, request, url_for, session
 from bonus_questions import SAMPLE_QUESTIONS
 import datetime
 from werkzeug.utils import secure_filename
@@ -9,7 +9,7 @@ ALLOWED_EXTENSIONS = {'png', 'jpg'}
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = '/static/images'
-
+app.secret_key = b'_5#y2L"F4Q8z\xec]/'
 
 @app.route("/bonus-questions")
 def main():
@@ -238,6 +238,21 @@ def delete_tag(question_id,tag_id):
     ids = [question_id, tag_id]
     data_manager.delete_tag_from_question(ids)
     return redirect(url_for('list_answers', id=question_id))
+
+
+@app.route('/registration', methods=['GET', 'POST'])
+def registration():
+    mails = [x['email'] for x in data_manager.get_all_user_and_email()]
+    if request.method == 'POST':
+        if request.form['email'] not in mails:
+            email = request.form['email']
+            password = data_manager.hash_password(request.form['password'])
+            reg_date = str(datetime.datetime.now())
+            data_manager.add_new_user([email,password,reg_date,0,0,0,0])
+            return redirect('/')
+        else:
+            flash("E-mail taken")
+    return render_template('registration.html')
 
 
 if __name__ == "__main__":

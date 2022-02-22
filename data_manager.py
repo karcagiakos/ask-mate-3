@@ -1,6 +1,18 @@
 import database_common
 from psycopg2 import sql
 from markupsafe import Markup
+import bcrypt
+
+
+def hash_password(plain_text_password):
+    # By using bcrypt, the salt is saved into the hash itself
+    hashed_bytes = bcrypt.hashpw(plain_text_password.encode('utf-8'), bcrypt.gensalt())
+    return hashed_bytes.decode('utf-8')
+
+
+def verify_password(plain_text_password, hashed_password):
+    hashed_bytes_password = hashed_password.encode('utf-8')
+    return bcrypt.checkpw(plain_text_password.encode('utf-8'), hashed_bytes_password)
 
 
 def markup(searched_question,details):
@@ -16,6 +28,7 @@ def markup(searched_question,details):
                         new.append(value[i])
                 dicts[key] = Markup(" ".join(new))
     return details
+
 
 
 @database_common.connection_handler
@@ -312,3 +325,20 @@ def get_question_id_by_answer_id(cursor,answer_id):
     WHERE id= %(a_i)s'''
     cursor.execute(query, {'a_i':answer_id})
     return cursor.fetchall()
+
+@database_common.connection_handler
+def get_all_user_and_email(cursor):
+    query= '''
+    SELECT email FROM users
+    '''
+    cursor.execute(query)
+    return cursor.fetchall()
+
+
+@database_common.connection_handler
+def add_new_user(cursor, data):
+    query='''
+    INSERT INTO users (email,password_hash,registration_date,number_of_questions,number_of_answers,number_of_comments,reputation)
+    VALUES (%s,%s,%s,%s,%s,%s,%s)
+    '''
+    cursor.execute(query, data)
