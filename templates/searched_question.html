@@ -1,0 +1,76 @@
+{% extends "layout.html" %}
+
+{% block head %}
+    <h2>Search Result</h2>
+{% endblock head %}
+
+{% block body %}
+
+     <section class="search">
+        <h3>Search for questions</h3>
+    <form action="/search">
+        <input name="q" type="text"><br>
+        <button type="submit">Search</button>
+    </form>
+ </section>
+
+
+ {% for j in range(details|length) %}
+<table width="100%">
+        <tr>
+            {% for key in details[0].keys() %}
+                {% if key != 'image' %}
+                <th>{{ key.capitalize().replace('_',' ') }}</th>
+                {% endif %}
+            {% endfor %}
+        </tr>
+
+
+            <tr>
+        {% for key, value in details[j].items() %}
+            {% if key != 'image' %}
+
+                <td>{{ value }}</td>
+            {% endif %}
+                {% endfor %}
+
+                </tr>
+
+
+</table>
+
+
+     <table>
+
+ {% if details_ids[j] in question_ids %}
+            <tr>
+            {% for key in answers[0].keys() %}
+                {% if key != 'image' %}
+                <th>{{ key.capitalize().replace('_',' ') }} </th>
+{% endif %}
+            {% endfor %}
+            </tr>
+        {% else %}
+            <h5> </h5>
+           {% endif %}
+     {% for dicts in answers %}
+         {% if details[j]['id'] == dicts['question_id']%}
+     <tr>
+        {%  for key, value in dicts.items() %}
+           {% if key != 'image' %}
+            <td>{{ value }}</td>
+            {% endif %}
+                {% endfor %}
+                </tr>
+
+         {% endif %}
+ {% endfor %}
+
+
+     </table>
+
+
+{% endfor %}
+     <button  class="button button1" onclick="location.href='/list'" type="button">
+         Back to the list</button><br>
+{% endblock body %}
