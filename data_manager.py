@@ -97,8 +97,8 @@ def add_new_answer(cursor, data):
 @database_common.connection_handler
 def add_new_question(cursor, data):
     query = """
-    INSERT INTO question (submission_time,view_number, vote_number, title, message, image)
-    VALUES (%s,%s,%s,%s,%s,%s)
+    INSERT INTO question (submission_time,view_number, vote_number, title, message, image, user_id)
+    VALUES (%s,%s,%s,%s,%s,%s,%s)
     """
     cursor.execute(query, data)
 
@@ -354,4 +354,13 @@ def get_users(cursor):
     query = '''
     SELECT * FROM users'''
     cursor.execute(query)
+    return cursor.fetchall()
+
+
+@database_common.connection_handler
+def get_user_id(cursor, email):
+    query = """
+    SELECT id FROM users 
+    WHERE email = %(e)s"""
+    cursor.execute(query, {'e': email})
     return cursor.fetchall()
