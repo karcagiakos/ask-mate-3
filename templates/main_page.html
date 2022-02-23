@@ -2,7 +2,7 @@
 
 {% block head %}
 
-<title>AskMate project</title>
+<title>Buzzsaws Askmate</title>
 
 {% endblock head %}
 
@@ -84,7 +84,11 @@
 {% if username != 'stranger' %}
     <button class="button button2" onclick="location.href='/add-question'" type="button">
     Add a new question
+    </button><br>
+    <button id="but" onclick="location.href='/users'" type="button">
+    Users list
+    </button><br>
     {% endif %}
-</button><br>
+
 
 {% endblock body %}
