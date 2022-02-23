@@ -187,8 +187,8 @@ def get_comments_for_answers(cursor, a_id):
 @database_common.connection_handler
 def add_new_comment_question(cursor, data):
     query = """
-    INSERT INTO comment (question_id,message,submission_time, edited_count)
-    VALUES (%s,%s,%s,%s)
+    INSERT INTO comment (question_id,message,submission_time, edited_count, user_id)
+    VALUES (%s,%s,%s,%s,%s)
     """
     cursor.execute(query, data)
 
@@ -196,8 +196,8 @@ def add_new_comment_question(cursor, data):
 @database_common.connection_handler
 def add_new_comment_answer(cursor, data):
     query = """
-    INSERT INTO comment (answer_id,message,submission_time, edited_count)
-    VALUES (%s,%s,%s,%s)
+    INSERT INTO comment (answer_id,message,submission_time, edited_count, user_id)
+    VALUES (%s,%s,%s,%s,%s)
     """
     cursor.execute(query, data)
 
