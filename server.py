@@ -19,24 +19,28 @@ def main():
 @app.route("/", methods=['GET'])
 def show_main_page():
     username = 'stranger'
+    user_id = None
     if 'username' in session:
         username = escape(session['username'])
+        user_id = data_manager.get_user_id(escape(session['username']))[0]['id']
     order_by = request.args.get('headers')
     sort = request.args.get('order')
-    data = data_manager.last_five_questions(order_by='submission_time')
+    data = data_manager.last_five_questions()
     if order_by and sort:
         if sort == 'DESC':
             data = data_manager.last_five_questions(order_by)[::-1]
         else:
             data = data_manager.last_five_questions(order_by)
-    return render_template('main_page.html', data=data, username=username)
+    return render_template('main_page.html', data=data, username=username, user_id=user_id)
 
 
 @app.route("/list", methods=['GET', 'POST'])
 def list_questions():
     username = 'stranger'
+    user_id = None
     if 'username' in session:
         username = escape(session['username'])
+        user_id = data_manager.get_user_id(escape(session['username']))[0]['id']
     data = data_manager.get_questions()
     order_by = request.args.get('headers')
     sort = request.args.get('order')
@@ -45,7 +49,7 @@ def list_questions():
             data = data_manager.sort_questions(order_by)[::-1]
         else:
             data = data_manager.sort_questions(order_by)
-    return render_template('main_page.html', data=data, username=username)
+    return render_template('main_page.html', data=data, username=username, user_id=user_id)
 
 
 @app.route("/questions/<int:id>", methods=['GET', 'POST'])
@@ -76,7 +80,7 @@ def add_new_answer(id):
             user_id = data_manager.get_user_id(escape(session['username']))[0]['id']
             if temp_file_name:
                 temp_file_name.save(os.path.join('static/images/', temp_file_name.filename))
-            data = [str(datetime.datetime.now()), 0, id, request.form['answer'], file_name,False,user_id]
+            data = [str(datetime.datetime.now()), 0, id, request.form['answer'], file_name, False, user_id]
             data_manager.add_new_answer(data)
             data_manager.increase_answer_number(user_id)
             return redirect(url_for('list_answers', id=id))
@@ -181,8 +185,8 @@ def add_comment_to_question(question_id):
 
 @app.route('/answer/<int:answer_id>/new-comment', methods=['GET', 'POST'])
 def add_comment_to_answer(answer_id):
+    question_id = data_manager.display_answer(answer_id)[0]['question_id']
     if 'username' in session:
-        question_id = data_manager.display_answer(answer_id)[0]['question_id']
         user_id = data_manager.get_user_id(escape(session['username']))[0]['id']
         if request.method == 'POST':
             data = [answer_id, request.form['comment'], str(datetime.datetime.now()), 0, user_id]
@@ -311,6 +315,20 @@ def list_users():
     if 'username' in session:
         users = data_manager.get_users()
         return render_template('list_users.html', users=users)
+    else:
+        return redirect('/')
+
+
+@app.route('/user/<int:user_id>')
+def show_user(user_id):
+    if 'username' in session:
+        username = escape(session['username'])
+        data = data_manager.get_user(user_id)
+        questions = data_manager.get_questions_by_user_id(user_id)
+        answers = data_manager.get_answers_by_user_id(user_id)
+        comments = data_manager.get_comments_by_user_id(user_id)
+        return render_template('user_page.html', user_id=user_id, data=data, questions=questions,
+                               answers=answers, comments=comments, username= username)
     else:
         return redirect('/')
 

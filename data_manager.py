@@ -40,9 +40,8 @@ def get_questions(cursor):
 
 
 @database_common.connection_handler
-def last_five_questions(cursor, order_by):
+def last_five_questions(cursor):
     cursor.execute(sql.SQL("SELECT * FROM question ORDER BY submission_time DESC LIMIT 5").format())
-        # order_by=sql.Identifier(order_by)))
     return cursor.fetchall()
 
 
@@ -391,3 +390,39 @@ def increase_comment_number(cursor, user_id):
     SET number_of_comments = number_of_comments + 1
     WHERE id = %(u_i)s"""
     cursor.execute(query, {'u_i': user_id})
+
+
+@database_common.connection_handler
+def get_user(cursor, user_id):
+    query = """
+    SELECT * FROM users 
+    WHERE id = %(user_id)s"""
+    cursor.execute(query, {'user_id': user_id})
+    return cursor.fetchall()
+
+
+@database_common.connection_handler
+def get_questions_by_user_id(cursor, user_id):
+    query = """
+    SELECT * FROM question
+     WHERE user_id = %(user_id)s"""
+    cursor.execute(query, {'user_id': user_id})
+    return cursor.fetchall()
+
+
+@database_common.connection_handler
+def get_answers_by_user_id(cursor, user_id):
+    query = """
+        SELECT * FROM answer
+         WHERE user_id = %(user_id)s"""
+    cursor.execute(query, {'user_id': user_id})
+    return cursor.fetchall()
+
+
+@database_common.connection_handler
+def get_comments_by_user_id(cursor, user_id):
+    query = """
+        SELECT * FROM comment
+         WHERE user_id = %(user_id)s"""
+    cursor.execute(query, {'user_id': user_id})
+    return cursor.fetchall()

@@ -9,8 +9,6 @@
 
 {% block body %}
 
-<h1>BUZZSAWS Q/A</h1>
-
     <h4>Welcome {{ username }}</h4>
 
  <section class="search">
@@ -46,6 +44,7 @@
     Login</button><br>
 
     {% else %}
+    <button id="but" onclick="location.href='{{url_for('show_user', user_id=user_id)}}'" type="button">Profile</button>
     <button id="but" onclick="location.href='/logout'" type="button">
     Logout</button><br>
 {% endif %}

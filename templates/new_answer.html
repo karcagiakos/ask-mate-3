@@ -2,13 +2,12 @@
 
 {% block head %}
     <title>New Answer</title>
-<h1> New answer </h1>
-<h2> For question: </h2>
-<h4>  </h4>
+
 {% endblock head %}
 
-
 {% block body %}
+    <h1> New answer </h1>
+    <h2> For question: </h2>
 <form action="{{url_for('add_new_answer', id=id)}}" method="post" enctype="multipart/form-data">
     <!--<label for="question">Question:</label> -->
     <textarea rows="10" cols="20" name="answer">New answer here

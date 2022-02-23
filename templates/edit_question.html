@@ -1,15 +1,12 @@
 {% extends 'layout.html' %}
 
-
-
   {% block head %}
       <title>Edit Question</title>
 
- <h1>Edit {{ question[0]['title'] }} question</h1>
     {% endblock head %}
 
-
 {% block body %}
+    <h1>Edit {{ question[0]['title'] }} question</h1>
 
 <form action="{{url_for('edit_question', question_id=question_id)}}" method="post" >
   <!--<label for="question">Question:</label> -->

@@ -3,14 +3,12 @@
 
 <title>Display Question</title>
 
-           <h3>Title: {{ question[0]['title'] }}</h3>
 
-
-
-    <h3>Message: {{ question[0]['message'] }}</h3>
 {% endblock head %}
 
     {% block body %}
+        <h3>Title: {{ question[0]['title'] }}</h3>
+        <h3>Message: {{ question[0]['message'] }}</h3>
         <p><h4>TAG(s):</h4>
         {% for i in range(tags|length) %}
             <button class="tag" type="button">{{ tags[i]['name']}} <a href="{{url_for('delete_tag', question_id=id, tag_id=tags[i]['id']) }}" alt="delete">X</a></button>

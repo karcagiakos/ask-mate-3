@@ -21,7 +21,7 @@
 {% if key == 'id' or key == 'password_hash' %}
     {{ continue }}
     {% elif key == 'email' %}
-    <td>{{ value }}</td>
+    <td><a id="{{ user['id'] }}" href="/user/{{ user['id'] }}"> {{ value }}</a></td>
 {#    <td><a id="{{ dicts['id'] }}" href="/questions/{{ dicts['id'] }}">{{ value }}</a></td>#}
 
     {% else %}

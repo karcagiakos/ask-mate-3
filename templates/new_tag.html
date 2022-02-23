@@ -3,14 +3,10 @@
 {% block head %}
     <title>New Tag</title>
 
-    <h3>Add new tag</h3>
-
-
 {% endblock head %}
 
-
 {% block body %}
-
+    <h3>Add new tag</h3>
     <form action={{url_for('new_tag', question_id = question_id)}} method="post">
     <label>Add a new tag</label>
     <input type="text" name="tag" list="tags">

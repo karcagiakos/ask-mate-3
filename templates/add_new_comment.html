@@ -2,13 +2,11 @@
 
 {% block head %}
     <title>New Comment</title>
-<h1> New comment </h1>
 
-<h4>  </h4>
 {% endblock head %}
 
-
 {% block body %}
+    <h1> New comment </h1>
 <form action="{{url_for('add_comment_to_question', question_id=id)}}" method="post" enctype="multipart/form-data">
     <!--<label for="question">Question:</label> -->
     <textarea rows="10" cols="20" name="comment">New comment here
