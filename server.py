@@ -73,10 +73,12 @@ def add_new_answer(id):
         if request.method == 'POST':
             temp_file_name = request.files['file']
             file_name = str(request.files['file']).split()[1][1:-1]
+            user_id = data_manager.get_user_id(escape(session['username']))[0]['id']
             if temp_file_name:
                 temp_file_name.save(os.path.join('static/images/', temp_file_name.filename))
-            data = [str(datetime.datetime.now()), 0, id, request.form['answer'], file_name]
+            data = [str(datetime.datetime.now()), 0, id, request.form['answer'], file_name,False,user_id]
             data_manager.add_new_answer(data)
+            data_manager.increase_answer_number(user_id)
             return redirect(url_for('list_answers', id=id))
         return render_template('new_answer.html', id=id)
     else:
@@ -89,10 +91,13 @@ def add_question():
         if request.method == "POST":
             temp_file_name = request.files['file']
             file_name = str(request.files['file']).split()[1][1:-1]
+            user_id = data_manager.get_user_id(escape(session['username']))[0]['id']
             if temp_file_name:
                 temp_file_name.save(os.path.join('static/images/', temp_file_name.filename))
-            data = [str(datetime.datetime.now()), 0, 0, request.form['title'], request.form['message'], file_name]
+            data = [
+                str(datetime.datetime.now()), 0, 0, request.form['title'], request.form['message'], file_name, user_id]
             data_manager.add_new_question(data)
+            data_manager.increase_question_number(user_id)
             return redirect('/list')
         return render_template('add_question.html')
     else:
@@ -164,20 +169,26 @@ def vote_down_question(question_id):
 
 @app.route('/question/<int:question_id>/new-comment', methods=['GET', 'POST'])
 def add_comment_to_question(question_id):
-    if request.method == 'POST':
-        data = [question_id, request.form['comment'], str(datetime.datetime.now()), 0]
-        data_manager.add_new_comment_question(data)
-        return redirect(url_for('list_answers', id=question_id))
+    if 'username' in session:
+        user_id = data_manager.get_user_id(escape(session['username']))[0]['id']
+        if request.method == 'POST':
+            data = [question_id, request.form['comment'], str(datetime.datetime.now()), 0, user_id]
+            data_manager.add_new_comment_question(data)
+            data_manager.increase_comment_number(user_id)
+            return redirect(url_for('list_answers', id=question_id))
     return render_template('add_new_comment.html', id=question_id)
 
 
 @app.route('/answer/<int:answer_id>/new-comment', methods=['GET', 'POST'])
 def add_comment_to_answer(answer_id):
-    question_id = data_manager.display_answer(answer_id)[0]['question_id']
-    if request.method == 'POST':
-        data = [answer_id, request.form['comment'], str(datetime.datetime.now()), 0]
-        data_manager.add_new_comment_answer(data)
-        return redirect(url_for('list_answers', id=question_id))
+    if 'username' in session:
+        question_id = data_manager.display_answer(answer_id)[0]['question_id']
+        user_id = data_manager.get_user_id(escape(session['username']))[0]['id']
+        if request.method == 'POST':
+            data = [answer_id, request.form['comment'], str(datetime.datetime.now()), 0, user_id]
+            data_manager.add_new_comment_answer(data)
+            data_manager.increase_comment_number(user_id)
+            return redirect(url_for('list_answers', id=question_id))
     return render_template('add_new_comment_for_answers.html', answer_id=answer_id, question_id=question_id)
 
 

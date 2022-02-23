@@ -41,8 +41,8 @@ def get_questions(cursor):
 
 @database_common.connection_handler
 def last_five_questions(cursor, order_by):
-    cursor.execute(sql.SQL("SELECT * FROM question ORDER BY {order_by} LIMIT 5").format(
-        order_by=sql.Identifier(order_by)))
+    cursor.execute(sql.SQL("SELECT * FROM question ORDER BY submission_time DESC LIMIT 5").format())
+        # order_by=sql.Identifier(order_by)))
     return cursor.fetchall()
 
 
@@ -88,8 +88,8 @@ def get_single_question(cursor, c_id):
 @database_common.connection_handler
 def add_new_answer(cursor, data):
     query = """
-    INSERT INTO answer (submission_time,vote_number, question_id, message, image)
-    VALUES (%s,%s,%s,%s,%s)
+    INSERT INTO answer (submission_time,vote_number, question_id, message, image, state, user_id)
+    VALUES (%s,%s,%s,%s,%s,%s,%s)
     """
     cursor.execute(query, data)
 
@@ -97,8 +97,8 @@ def add_new_answer(cursor, data):
 @database_common.connection_handler
 def add_new_question(cursor, data):
     query = """
-    INSERT INTO question (submission_time,view_number, vote_number, title, message, image)
-    VALUES (%s,%s,%s,%s,%s,%s)
+    INSERT INTO question (submission_time,view_number, vote_number, title, message, image, user_id)
+    VALUES (%s,%s,%s,%s,%s,%s,%s)
     """
     cursor.execute(query, data)
 
@@ -187,8 +187,8 @@ def get_comments_for_answers(cursor, a_id):
 @database_common.connection_handler
 def add_new_comment_question(cursor, data):
     query = """
-    INSERT INTO comment (question_id,message,submission_time, edited_count)
-    VALUES (%s,%s,%s,%s)
+    INSERT INTO comment (question_id,message,submission_time, edited_count, user_id)
+    VALUES (%s,%s,%s,%s,%s)
     """
     cursor.execute(query, data)
 
@@ -196,8 +196,8 @@ def add_new_comment_question(cursor, data):
 @database_common.connection_handler
 def add_new_comment_answer(cursor, data):
     query = """
-    INSERT INTO comment (answer_id,message,submission_time, edited_count)
-    VALUES (%s,%s,%s,%s)
+    INSERT INTO comment (answer_id,message,submission_time, edited_count, user_id)
+    VALUES (%s,%s,%s,%s,%s)
     """
     cursor.execute(query, data)
 
@@ -355,3 +355,39 @@ def get_users(cursor):
     SELECT * FROM users'''
     cursor.execute(query)
     return cursor.fetchall()
+
+
+@database_common.connection_handler
+def get_user_id(cursor, email):
+    query = """
+    SELECT id FROM users 
+    WHERE email = %(e)s"""
+    cursor.execute(query, {'e': email})
+    return cursor.fetchall()
+
+
+@database_common.connection_handler
+def increase_question_number(cursor, user_id):
+    query = """
+    UPDATE users
+    SET number_of_questions = number_of_questions + 1
+    WHERE id = %(u_i)s"""
+    cursor.execute(query, {'u_i': user_id})
+
+
+@database_common.connection_handler
+def increase_answer_number(cursor, user_id):
+    query = """
+    UPDATE users
+    SET number_of_answers = number_of_answers + 1
+    WHERE id = %(u_i)s"""
+    cursor.execute(query, {'u_i': user_id})
+
+
+@database_common.connection_handler
+def increase_comment_number(cursor, user_id):
+    query = """
+    UPDATE users
+    SET number_of_comments = number_of_comments + 1
+    WHERE id = %(u_i)s"""
+    cursor.execute(query, {'u_i': user_id})
