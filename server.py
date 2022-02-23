@@ -167,20 +167,24 @@ def vote_down_question(question_id):
 
 @app.route('/question/<int:question_id>/new-comment', methods=['GET', 'POST'])
 def add_comment_to_question(question_id):
-    if request.method == 'POST':
-        data = [question_id, request.form['comment'], str(datetime.datetime.now()), 0]
-        data_manager.add_new_comment_question(data)
-        return redirect(url_for('list_answers', id=question_id))
+    if 'username' in session:
+        user_id = data_manager.get_user_id(escape(session['username']))[0]['id']
+        if request.method == 'POST':
+            data = [question_id, request.form['comment'], str(datetime.datetime.now()), 0, user_id]
+            data_manager.add_new_comment_question(data)
+            return redirect(url_for('list_answers', id=question_id))
     return render_template('add_new_comment.html', id=question_id)
 
 
 @app.route('/answer/<int:answer_id>/new-comment', methods=['GET', 'POST'])
 def add_comment_to_answer(answer_id):
-    question_id = data_manager.display_answer(answer_id)[0]['question_id']
-    if request.method == 'POST':
-        data = [answer_id, request.form['comment'], str(datetime.datetime.now()), 0]
-        data_manager.add_new_comment_answer(data)
-        return redirect(url_for('list_answers', id=question_id))
+    if 'username' in session:
+        question_id = data_manager.display_answer(answer_id)[0]['question_id']
+        user_id = data_manager.get_user_id(escape(session['username']))[0]['id']
+        if request.method == 'POST':
+            data = [answer_id, request.form['comment'], str(datetime.datetime.now()), 0, user_id]
+            data_manager.add_new_comment_answer(data)
+            return redirect(url_for('list_answers', id=question_id))
     return render_template('add_new_comment_for_answers.html', answer_id=answer_id, question_id=question_id)
 
 
