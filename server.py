@@ -89,9 +89,12 @@ def add_question():
         if request.method == "POST":
             temp_file_name = request.files['file']
             file_name = str(request.files['file']).split()[1][1:-1]
+            user_id = data_manager.get_user_id(escape(session['username']))[0]['id']
+            print(user_id)
             if temp_file_name:
                 temp_file_name.save(os.path.join('static/images/', temp_file_name.filename))
-            data = [str(datetime.datetime.now()), 0, 0, request.form['title'], request.form['message'], file_name]
+            data = [
+                str(datetime.datetime.now()), 0, 0, request.form['title'], request.form['message'], file_name, user_id]
             data_manager.add_new_question(data)
             return redirect('/list')
         return render_template('add_question.html')
