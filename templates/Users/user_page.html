@@ -1,4 +1,4 @@
-{% extends 'layout.html' %}
+{% extends 'Layout/layout.html' %}
 
 {% block head %}
 <title>Profile Page of</title>
@@ -32,7 +32,7 @@
     </table>
     <br>
 
-
+    {% if questions|length > 0 %}
         <table>
 {% for key in questions[0].keys() %}
     {% if key == 'user_id' %}
@@ -58,9 +58,11 @@
 
     {% endfor %}
     </table>
-
+    {% else %}
+    <h3>This user has no questions yet.</h3>
+    {% endif %}
     <br>
-
+    {% if answers|length > 0 %}
            <table>
 {% for key in answers[0].keys() %}
     {% if key == 'user_id' and key == 'state' %}
@@ -86,8 +88,11 @@
 
     {% endfor %}
     </table>
+    {% else %}
+    <h3>This user has no answers yet.</h3>
+    {% endif %}
 <br>
-
+    {% if comments|length > 0 %}
               <table>
 {% for key in comments[0].keys() %}
     {% if key == 'user_id' or key == 'question_id' or key == 'answer_id' %}
@@ -105,7 +110,7 @@
                  {{ continue }}
                  {% elif key == 'message' %}
                     {% if comment['question_id'] == None %}
-                        {% for answer in answers %}
+                        {% for answer in all_answers %}
                         {% if answer['id'] == comment['answer_id'] %}
                             <td>
                             <a href="/questions/{{ answer['question_id'] }}">{{ value }}</a>
@@ -126,6 +131,10 @@
 
 
               </table>
+    {% else %}
+    <h3>This user has no comments yet.</h3>
+    {% endif %}
+    <br>
     <button  class="button button1" onclick="location.href='/list'" type="button">
          Back to the list</button><br>
 {% endblock body %}
