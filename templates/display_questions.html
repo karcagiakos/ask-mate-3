@@ -151,9 +151,12 @@
 
 
 
-
+{% if username != 'stranger' %}
   <button  class="button button2" onclick="location.href='{{url_for('add_new_answer', id=id)}}'" type="button">
-         Add a new answer</button><br>
+         Add a new answer
+  {% endif %}
+  </button><br>
+
 
 
 

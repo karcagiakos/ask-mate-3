@@ -7,7 +7,7 @@
 
 {% block body %}
 <h1>Add a new question</h1>
-<form action="/add_question" method="post" enctype="multipart/form-data">
+<form action="/add-question" method="post" enctype="multipart/form-data">
   <!--<label for="question">Question:</label> -->
     <input name="title" value={{ title if title else 'Title'}}> <br><br>
     <textarea id="question" name="message" rows="25" cols="30" >{{ message if message else 'Text here' }}</textarea> <br>

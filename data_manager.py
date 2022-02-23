@@ -327,9 +327,9 @@ def get_question_id_by_answer_id(cursor,answer_id):
     return cursor.fetchall()
 
 @database_common.connection_handler
-def get_all_user_and_email(cursor):
+def get_emails_and_passwords(cursor):
     query= '''
-    SELECT email FROM users
+    SELECT email, password_hash FROM users
     '''
     cursor.execute(query)
     return cursor.fetchall()
@@ -342,3 +342,12 @@ def add_new_user(cursor, data):
     VALUES (%s,%s,%s,%s,%s,%s,%s)
     '''
     cursor.execute(query, data)
+
+
+@database_common.connection_handler
+def get_password(cursor, email):
+    query = '''
+    SELECT password_hash FROM users
+    WHERE email = %(e_m)s'''
+    cursor.execute(query, {'e_m': email})
+    return cursor.fetchall()

@@ -11,6 +11,8 @@
 
 <h1>BUZZSAWS Q/A</h1>
 
+    <h4>Welcome {{ username }}</h4>
+
  <section class="search">
         <h3>Search for questions</h3>
     <form action="/search">
@@ -36,8 +38,17 @@
     </select>
 </form>
 
+
      <button id="but" type=""><a href = "/list">Show all results</a></button>
     <button id="but"><a href="/registration">Register</a></button>
+{%  if username == 'stranger' %}
+    <button id="but" onclick="location.href='/login'" type="button">
+    Login</button><br>
+
+    {% else %}
+    <button id="but" onclick="location.href='/logout'" type="button">
+    Logout</button><br>
+{% endif %}
 
 <table>
     <tr>
@@ -70,9 +81,10 @@
 
 </table>
 
-
-    <button class="button button2" onclick="location.href='/add_question'" type="button">
+{% if username != 'stranger' %}
+    <button class="button button2" onclick="location.href='/add-question'" type="button">
     Add a new question
+    {% endif %}
 </button><br>
 
 {% endblock body %}
