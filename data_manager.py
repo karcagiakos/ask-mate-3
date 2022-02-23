@@ -41,8 +41,8 @@ def get_questions(cursor):
 
 @database_common.connection_handler
 def last_five_questions(cursor, order_by):
-    cursor.execute(sql.SQL("SELECT * FROM question ORDER BY {order_by} LIMIT 5").format(
-        order_by=sql.Identifier(order_by)))
+    cursor.execute(sql.SQL("SELECT * FROM question ORDER BY submission_time DESC LIMIT 5").format())
+        # order_by=sql.Identifier(order_by)))
     return cursor.fetchall()
 
 
@@ -88,8 +88,8 @@ def get_single_question(cursor, c_id):
 @database_common.connection_handler
 def add_new_answer(cursor, data):
     query = """
-    INSERT INTO answer (submission_time,vote_number, question_id, message, image)
-    VALUES (%s,%s,%s,%s,%s)
+    INSERT INTO answer (submission_time,vote_number, question_id, message, image, state, user_id)
+    VALUES (%s,%s,%s,%s,%s,%s,%s)
     """
     cursor.execute(query, data)
 
