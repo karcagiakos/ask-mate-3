@@ -1,4 +1,4 @@
-from flask import Flask, flash, render_template, redirect, request, url_for, session
+from flask import Flask, flash, render_template, redirect, request, url_for, session, escape
 from bonus_questions import SAMPLE_QUESTIONS
 import datetime
 from werkzeug.utils import secure_filename
@@ -18,6 +18,9 @@ def main():
 
 @app.route("/", methods=['GET'])
 def show_main_page():
+    username = 'stranger'
+    if 'username' in session:
+        username = escape(session['username'])
     order_by = request.args.get('headers')
     sort = request.args.get('order')
     data = data_manager.last_five_questions(order_by='submission_time')
@@ -26,11 +29,14 @@ def show_main_page():
             data = data_manager.last_five_questions(order_by)[::-1]
         else:
             data = data_manager.last_five_questions(order_by)
-    return render_template('main_page.html', data=data)
+    return render_template('main_page.html', data=data, username=username)
 
 
 @app.route("/list", methods=['GET', 'POST'])
 def list_questions():
+    username = 'stranger'
+    if 'username' in session:
+        username = escape(session['username'])
     data = data_manager.get_questions()
     order_by = request.args.get('headers')
     sort = request.args.get('order')
@@ -39,12 +45,15 @@ def list_questions():
             data = data_manager.sort_questions(order_by)[::-1]
         else:
             data = data_manager.sort_questions(order_by)
-    return render_template('main_page.html', data=data)
+    return render_template('main_page.html', data=data, username=username)
 
 
 @app.route("/questions/<int:id>", methods=['GET','POST'])
 def list_answers(id):
     # tags = [x['name'] for x in data_manager.get_question_id_with_tag_name(id)]
+    username = 'stranger'
+    if 'username' in session:
+        username = escape(session['username'])
     tags = data_manager.get_question_id_with_tag_name(id)
     answers = data_manager.list_answers(id)
     question = data_manager.get_single_question(id)
@@ -54,33 +63,39 @@ def list_answers(id):
     comment_ids = set([x['answer_id'] for x in answer_comments])
     data_manager.update_view_number(id)
 
-    return render_template('display_questions.html', comment_ids=comment_ids, question_id=id, id=id, question=question, answer=answers, comments=comments, tags=tags, answer_comments=answer_comments, answer_ids=answer_ids)
+    return render_template('display_questions.html', comment_ids=comment_ids, question_id=id, id=id, question=question, answer=answers, comments=comments, tags=tags, answer_comments=answer_comments, answer_ids=answer_ids, username=username)
 
 
 @app.route("/questions/<int:id>/new-answer", methods=['GET', 'POST'])
 def add_new_answer(id):
-    if request.method == 'POST':
-        temp_file_name = request.files['file']
-        file_name = str(request.files['file']).split()[1][1:-1]
-        if temp_file_name:
-            temp_file_name.save(os.path.join('static/images/', temp_file_name.filename))
-        data = [str(datetime.datetime.now()),0,id,request.form['answer'],file_name]
-        data_manager.add_new_answer(data)
+    if 'username' in session:
+        if request.method == 'POST':
+            temp_file_name = request.files['file']
+            file_name = str(request.files['file']).split()[1][1:-1]
+            if temp_file_name:
+                temp_file_name.save(os.path.join('static/images/', temp_file_name.filename))
+            data = [str(datetime.datetime.now()),0,id,request.form['answer'],file_name]
+            data_manager.add_new_answer(data)
+            return redirect(url_for('list_answers', id=id))
+        return render_template('new_answer.html', id=id)
+    else:
         return redirect(url_for('list_answers', id=id))
-    return render_template('new_answer.html', id=id)
 
 
-@app.route("/add_question", methods=['GET', 'POST'])
+@app.route("/add-question", methods=['GET', 'POST'])
 def add_question():
-    if request.method == "POST":
-        temp_file_name = request.files['file']
-        file_name = str(request.files['file']).split()[1][1:-1]
-        if temp_file_name:
-            temp_file_name.save(os.path.join('static/images/', temp_file_name.filename))
-        data = [str(datetime.datetime.now()), 0, 0, request.form['title'], request.form['message'], file_name]
-        data_manager.add_new_question(data)
-        return redirect('/list')
-    return render_template('add_question.html')
+    if 'username' in session:
+        if request.method == "POST":
+            temp_file_name = request.files['file']
+            file_name = str(request.files['file']).split()[1][1:-1]
+            if temp_file_name:
+                temp_file_name.save(os.path.join('static/images/', temp_file_name.filename))
+            data = [str(datetime.datetime.now()), 0, 0, request.form['title'], request.form['message'], file_name]
+            data_manager.add_new_question(data)
+            return redirect('/list')
+        return render_template('add_question.html')
+    else:
+        return redirect('/')
 
 
 @app.route('/question/<int:question_id>/edit', methods=['GET', 'POST'])
@@ -242,13 +257,14 @@ def delete_tag(question_id,tag_id):
 
 @app.route('/registration', methods=['GET', 'POST'])
 def registration():
-    mails = [x['email'] for x in data_manager.get_all_user_and_email()]
+    mails = [x['email'] for x in data_manager.get_emails_and_passwords()]
     if request.method == 'POST':
         if request.form['email'] not in mails:
             email = request.form['email']
             password = data_manager.hash_password(request.form['password'])
             reg_date = str(datetime.datetime.now())
             data_manager.add_new_user([email,password,reg_date,0,0,0,0])
+
             return redirect('/')
         else:
             flash("E-mail taken")
@@ -257,8 +273,23 @@ def registration():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    users = [x['email'] for x in data_manager.get_emails_and_passwords()]
+    if request.method == 'POST':
+        if request.form['email'] in users:
+            password = data_manager.get_password(request.form['email'])[0]['password_hash']
+            if data_manager.verify_password(request.form['password'], password):
+                session['username'] = request.form['email']
+                return redirect(url_for('show_main_page'))
+            else:
+                return 'Invalid login attempt'
+        else:
+            return 'Invalid login attempt'
+    return render_template('login.html')
 
-   return render_template('login.html')
+@app.route('/logout')
+def logout():
+    session.pop('username', None)
+    return redirect(url_for('show_main_page'))
 
 
 if __name__ == "__main__":
