@@ -1,0 +1,37 @@
+{% extends 'layout.html' %}
+{% block head %}
+<title>User List</title>
+{% endblock head %}
+{% block body %}
+    <h3>Currently registered users</h3><br>
+<table>
+<tr>
+    {% for header in users[0].keys() %}
+        {% if header == 'id' or header == 'password_hash' %}
+            {{ continue }}
+            {% else %}
+         <th>{{ header.capitalize().replace('_',' ') }}</th>
+    {%  endif %}
+    {% endfor %}
+</tr>
+<tr>
+{% for user in users %}
+    </tr>
+{% for key, value in user.items() %}
+{% if key == 'id' or key == 'password_hash' %}
+    {{ continue }}
+    {% elif key == 'email' %}
+    <td>{{ value }}</td>
+{#    <td><a id="{{ dicts['id'] }}" href="/questions/{{ dicts['id'] }}">{{ value }}</a></td>#}
+
+    {% else %}
+    <td>{{ value }}</td>
+{% endif %}
+{% endfor %}
+{% endfor %}
+</table><br>
+
+    <button  class="button button1" onclick="location.href='/list'" type="button">
+         Back to the list</button><br>
+{% endblock body %}
+

@@ -15,7 +15,7 @@ def verify_password(plain_text_password, hashed_password):
     return bcrypt.checkpw(plain_text_password.encode('utf-8'), hashed_bytes_password)
 
 
-def markup(searched_question,details):
+def markup(searched_question, details):
     for dicts in details:
         for key, value in dicts.items():
             if key == 'title' or key == 'message':
@@ -30,7 +30,6 @@ def markup(searched_question,details):
     return details
 
 
-
 @database_common.connection_handler
 def get_questions(cursor):
     query = """
@@ -42,8 +41,8 @@ def get_questions(cursor):
 
 @database_common.connection_handler
 def last_five_questions(cursor, order_by):
-    cursor.execute(sql.SQL("SELECT * FROM question ORDER BY {order_by} LIMIT 5").
-           format(order_by=sql.Identifier(order_by)))
+    cursor.execute(sql.SQL("SELECT * FROM question ORDER BY {order_by} LIMIT 5").format(
+        order_by=sql.Identifier(order_by)))
     return cursor.fetchall()
 
 
@@ -57,32 +56,32 @@ def get_answers(cursor):
 
 
 @database_common.connection_handler
-def list_answers(cursor, id):
+def list_answers(cursor, q_id):
     query = """
     SELECT * FROM answer 
-    WHERE question_id = %(id)s
+    WHERE question_id = %(q_id)s
     ORDER BY vote_number DESC
     """
-    cursor.execute(query, {'id': id})
+    cursor.execute(query, {'q_id': q_id})
     return cursor.fetchall()
 
 
 @database_common.connection_handler
-def display_answer(cursor, id):
+def display_answer(cursor, c_id):
     query = """
     SELECT * FROM answer 
-    WHERE  id = %(id)s
+    WHERE  id = %(c_id)s
     """
-    cursor.execute(query, {'id': id})
+    cursor.execute(query, {'c_id': c_id})
     return cursor.fetchall()
 
 
 @database_common.connection_handler
-def get_single_question(cursor, id):
+def get_single_question(cursor, c_id):
     query = """
-    SELECT * FROM question WHERE id = %(id)s
+    SELECT * FROM question WHERE id = %(c_id)s
     """
-    cursor.execute(query, {'id': id})
+    cursor.execute(query, {'c_id': c_id})
     return cursor.fetchall()
 
 
@@ -111,77 +110,77 @@ def update_question(cursor, data):
     SET title = %s, message = %s
     WHERE id = %s
     """
-    cursor.execute(query,data)
+    cursor.execute(query, data)
 
 
 @database_common.connection_handler
-def delete_answer(cursor, id):
-     query = """
+def delete_answer(cursor, c_id):
+    query = """
      DELETE FROM answer
-     WHERE id = %(id)s
+     WHERE id = %(c_id)s
      """
-     cursor.execute(query, {'id': id})
+    cursor.execute(query, {'c_id': c_id})
 
 
 @database_common.connection_handler
-def delete_question(cursor, id):
+def delete_question(cursor, c_id):
     query = """
     DELETE FROM question
-    WHERE id = %(id)s
+    WHERE id = %(c_id)s
     """
-    cursor.execute(query, {'id': id})
+    cursor.execute(query, {'c_id': c_id})
 
 
 @database_common.connection_handler
-def delete_comment(cursor, id):
+def delete_comment(cursor, c_id):
     query = """
     DELETE FROM comment
-    WHERE  id = %(id)s   """
-    cursor.execute(query, {'id': id})
+    WHERE  id = %(c_id)s   """
+    cursor.execute(query, {'c_id': c_id})
 
 
 @database_common.connection_handler
-def update_answer_vote(cursor,id,amount):
+def update_answer_vote(cursor, c_id, amount):
     query = """
     UPDATE answer
     SET vote_number = vote_number + %(amount)s
-    WHERE id = %(id)s"""
-    cursor.execute(query, {'id': id, 'amount': amount})
+    WHERE id = %(c_id)s"""
+    cursor.execute(query, {'c_id': c_id, 'amount': amount})
 
 
 @database_common.connection_handler
-def update_question_vote(cursor,id,amount):
+def update_question_vote(cursor, c_id, amount):
     query = """
     UPDATE question
     SET vote_number = vote_number + %(amount)s
-    WHERE id = %(id)s"""
-    cursor.execute(query, {'id': id, 'amount': amount})\
+    WHERE id = %(c_id)s"""
+    cursor.execute(query, {'c_id': c_id, 'amount': amount})
 
 
 @database_common.connection_handler
-def update_view_number(cursor,id):
+def update_view_number(cursor, c_id):
     query = """
     UPDATE question
     SET view_number = view_number + 1
-    WHERE id = %(id)s"""
-    cursor.execute(query, {'id': id})
+    WHERE id = %(c_id)s"""
+    cursor.execute(query, {'c_id': c_id})
 
 
 @database_common.connection_handler
-def get_comments_for_questions(cursor,id):
-    query= """
-    SELECT message,submission_time, id, edited_count FROM comment WHERE question_id = %(id)s
+def get_comments_for_questions(cursor, q_id):
+    query = """
+    SELECT message,submission_time, id, edited_count FROM comment WHERE question_id = %(q_id)s
     """
-    cursor.execute(query, {'id': id})
+    cursor.execute(query, {'q_id': q_id})
     return cursor.fetchall()
 
 
 @database_common.connection_handler
-def get_comments_for_answers(cursor,id):
-    query= """
-    SELECT message,submission_time, id, edited_count FROM comment WHERE answer_id = %(id)s
+def get_comments_for_answers(cursor, a_id):
+    query = """
+    SELECT message,submission_time, id, edited_count FROM comment WHERE answer_id = %(a_id)s
     """
-    cursor.execute(query, {'id': id})
+    cursor.execute(query, {'a_id': a_id})
     return cursor.fetchall()
 
 
@@ -204,7 +203,7 @@ def add_new_comment_answer(cursor, data):
 
 
 @database_common.connection_handler
-def search_questions(cursor,searched_question):
+def search_questions(cursor, searched_question):
     query = """
     SELECT DISTINCT * FROM question
     WHERE title ILIKE %(s_q)s OR message ILIKE %(s_q)s 
@@ -224,21 +223,21 @@ def search_answers(cursor, searched_answer):
 
 
 @database_common.connection_handler
-def update_answer(cursor,id,message):
+def update_answer(cursor, c_id, message):
     query = """
     UPDATE answer
     SET message = %(message)s
-    WHERE id = %(id)s"""
-    cursor.execute(query, {'id': id, 'message': message})
+    WHERE id = %(c_id)s"""
+    cursor.execute(query, {'c_id': c_id, 'message': message})
 
 
 @database_common.connection_handler
-def get_comment(cursor, id):
+def get_comment(cursor, c_id):
     query = """
     SELECT * 
     FROM comment
-    WHERE id = %(id)s"""
-    cursor.execute(query, {'id':id})
+    WHERE id = %(c_id)s"""
+    cursor.execute(query, {'c_id': c_id})
     return cursor.fetchall()
 
 
@@ -253,7 +252,7 @@ def update_comment(cursor, comment):
 
 @database_common.connection_handler
 def get_all_the_comments(cursor):
-    query ='''
+    query = '''
     SELECT *
     FROM comment ORDER BY submission_time'''
     cursor.execute(query)
@@ -262,9 +261,8 @@ def get_all_the_comments(cursor):
 
 @database_common.connection_handler
 def sort_questions(cursor, order_by):
-    cursor.execute(sql.SQL("SELECT * FROM question ORDER BY {order_by}").
-                              format(order_by=sql.Identifier(order_by)))
-                                    # sort=sql.Literal(sort)))
+    cursor.execute(sql.SQL("SELECT * FROM question ORDER BY {order_by}").format(order_by=sql.Identifier(order_by)))
+    # sort=sql.Literal(sort)))
     return cursor.fetchall()
 
 
@@ -282,12 +280,7 @@ def add_tag(cursor, tag):
     query = """
     INSERT INTO tag (name)
     VALUES (%(tag)s) ON CONFLICT DO NOTHING"""
-    cursor.execute(query, {'tag':tag})
-
-
-@database_common.connection_handler
-def delete_tag(cursor, tag):
-    pass
+    cursor.execute(query, {'tag': tag})
 
 
 @database_common.connection_handler
@@ -318,17 +311,19 @@ def delete_tag_from_question(cursor, ids):
     WHERE question_id = (%s) AND tag_id = (%s)"""
     cursor.execute(query, ids)
 
+
 @database_common.connection_handler
-def get_question_id_by_answer_id(cursor,answer_id):
-    query='''
+def get_question_id_by_answer_id(cursor, answer_id):
+    query = '''
     SELECT question_id FROM answer
-    WHERE id= %(a_i)s'''
-    cursor.execute(query, {'a_i':answer_id})
+    WHERE id = %(a_i)s'''
+    cursor.execute(query, {'a_i': answer_id})
     return cursor.fetchall()
+
 
 @database_common.connection_handler
 def get_emails_and_passwords(cursor):
-    query= '''
+    query = '''
     SELECT email, password_hash FROM users
     '''
     cursor.execute(query)
@@ -337,9 +332,10 @@ def get_emails_and_passwords(cursor):
 
 @database_common.connection_handler
 def add_new_user(cursor, data):
-    query='''
-    INSERT INTO users (email,password_hash,registration_date,number_of_questions,number_of_answers,number_of_comments,reputation)
-    VALUES (%s,%s,%s,%s,%s,%s,%s)
+    query = '''
+    INSERT INTO users (email,password_hash,registration_date,number_of_questions,
+    number_of_answers,number_of_comments,reputation)
+    VALUES (%s, %s, %s, %s, %s, %s, %s)
     '''
     cursor.execute(query, data)
 
@@ -350,4 +346,12 @@ def get_password(cursor, email):
     SELECT password_hash FROM users
     WHERE email = %(e_m)s'''
     cursor.execute(query, {'e_m': email})
+    return cursor.fetchall()
+
+
+@database_common.connection_handler
+def get_users(cursor):
+    query = '''
+    SELECT * FROM users'''
+    cursor.execute(query)
     return cursor.fetchall()
