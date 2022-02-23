@@ -90,7 +90,6 @@ def add_question():
             temp_file_name = request.files['file']
             file_name = str(request.files['file']).split()[1][1:-1]
             user_id = data_manager.get_user_id(escape(session['username']))[0]['id']
-            print(user_id)
             if temp_file_name:
                 temp_file_name.save(os.path.join('static/images/', temp_file_name.filename))
             data = [
