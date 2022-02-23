@@ -73,9 +73,10 @@ def add_new_answer(id):
         if request.method == 'POST':
             temp_file_name = request.files['file']
             file_name = str(request.files['file']).split()[1][1:-1]
+            user_id = data_manager.get_user_id(escape(session['username']))[0]['id']
             if temp_file_name:
                 temp_file_name.save(os.path.join('static/images/', temp_file_name.filename))
-            data = [str(datetime.datetime.now()), 0, id, request.form['answer'], file_name]
+            data = [str(datetime.datetime.now()), 0, id, request.form['answer'], file_name,False,user_id]
             data_manager.add_new_answer(data)
             return redirect(url_for('list_answers', id=id))
         return render_template('new_answer.html', id=id)
