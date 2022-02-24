@@ -1,0 +1,21 @@
+{% extends 'Layout/layout.html' %}
+
+{% block head %}
+    <title>Edit Answer</title>
+
+{% endblock head %}
+
+
+{% block body %}
+    <h1> Edit answer </h1>
+<form action="{{url_for('edit_answer', answer_id=answer_id)}}" method="post" enctype="multipart/form-data">
+    <!--<label for="question">Question:</label> -->
+    <textarea rows="10" cols="20" name="message">{{ answer[0]['message'] }}
+</textarea> <br>
+
+    <button class="button button1" type="submit">Submit</button>
+</form>
+
+<button  class="button button1" onclick="location.href='/list'" type="button">
+         Back to the list</button><br>
+{% endblock body %}

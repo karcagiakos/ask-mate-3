@@ -1,0 +1,22 @@
+{% extends 'Layout/layout.html' %}
+
+{% block head %}
+    <title>New Answer</title>
+
+{% endblock head %}
+
+{% block body %}
+    <h1> New answer </h1>
+    <h2> For question: </h2>
+<form action="{{url_for('add_new_answer', id=id)}}" method="post" enctype="multipart/form-data">
+    <!--<label for="question">Question:</label> -->
+    <textarea rows="10" cols="20" name="answer">New answer here
+</textarea> <br>
+    <p>You can also upload an image for your answer (formats: .jpg, .png)</p>
+    <input type="file" name="file"/><br><br>
+    <button class="button button1" type="submit">Submit</button>
+</form>
+
+<button  class="button button1" onclick="location.href='/list'" type="button">
+         Back to the list</button><br>
+{% endblock body %}

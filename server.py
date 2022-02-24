@@ -13,30 +13,34 @@ app.secret_key = b'_5#y2L"F4Q8z\xec]/'
 
 @app.route("/bonus-questions")
 def main():
-    return render_template('bonus_questions.html', questions=SAMPLE_QUESTIONS)
+    return render_template('Questions/bonus_questions.html', questions=SAMPLE_QUESTIONS)
 
 
 @app.route("/", methods=['GET'])
 def show_main_page():
     username = 'stranger'
+    user_id = None
     if 'username' in session:
         username = escape(session['username'])
+        user_id = data_manager.get_user_id(escape(session['username']))[0]['id']
     order_by = request.args.get('headers')
     sort = request.args.get('order')
-    data = data_manager.last_five_questions(order_by='submission_time')
+    data = data_manager.last_five_questions()
     if order_by and sort:
         if sort == 'DESC':
             data = data_manager.last_five_questions(order_by)[::-1]
         else:
             data = data_manager.last_five_questions(order_by)
-    return render_template('main_page.html', data=data, username=username)
+    return render_template('Main Page and Search/main_page.html', data=data, username=username, user_id=user_id)
 
 
 @app.route("/list", methods=['GET', 'POST'])
 def list_questions():
     username = 'stranger'
+    user_id = None
     if 'username' in session:
         username = escape(session['username'])
+        user_id = data_manager.get_user_id(escape(session['username']))[0]['id']
     data = data_manager.get_questions()
     order_by = request.args.get('headers')
     sort = request.args.get('order')
@@ -45,7 +49,7 @@ def list_questions():
             data = data_manager.sort_questions(order_by)[::-1]
         else:
             data = data_manager.sort_questions(order_by)
-    return render_template('main_page.html', data=data, username=username)
+    return render_template('Main Page and Search/main_page.html', data=data, username=username, user_id=user_id)
 
 
 @app.route("/questions/<int:id>", methods=['GET', 'POST'])
@@ -62,7 +66,7 @@ def list_answers(id):
     answer_ids = [x['id'] for x in answers]
     comment_ids = set([x['answer_id'] for x in answer_comments])
     data_manager.update_view_number(id)
-    return render_template('display_questions.html', comment_ids=comment_ids, question_id=id, id=id, question=question,
+    return render_template('Questions/display_questions.html', comment_ids=comment_ids, question_id=id, id=id, question=question,
                            answer=answers, comments=comments, tags=tags, answer_comments=answer_comments,
                            answer_ids=answer_ids, username=username)
 
@@ -76,11 +80,11 @@ def add_new_answer(id):
             user_id = data_manager.get_user_id(escape(session['username']))[0]['id']
             if temp_file_name:
                 temp_file_name.save(os.path.join('static/images/', temp_file_name.filename))
-            data = [str(datetime.datetime.now()), 0, id, request.form['answer'], file_name,False,user_id]
+            data = [str(datetime.datetime.now()), 0, id, request.form['answer'], file_name, False, user_id]
             data_manager.add_new_answer(data)
             data_manager.increase_answer_number(user_id)
             return redirect(url_for('list_answers', id=id))
-        return render_template('new_answer.html', id=id)
+        return render_template('Answers/new_answer.html', id=id)
     else:
         return redirect(url_for('list_answers', id=id))
 
@@ -99,7 +103,7 @@ def add_question():
             data_manager.add_new_question(data)
             data_manager.increase_question_number(user_id)
             return redirect('/list')
-        return render_template('add_question.html')
+        return render_template('Questions/add_question.html')
     else:
         return redirect('/')
 
@@ -111,7 +115,7 @@ def edit_question(question_id):
         data = [request.form['title'], request.form['message'], question_id]
         data_manager.update_question(data)
         return redirect(url_for('list_answers', id=question_id))
-    return render_template('edit_question.html', question_id=question_id, question=question)
+    return render_template('Questions/edit_question.html', question_id=question_id, question=question)
 
 
 @app.route('/question/<question_id>/delete')
@@ -153,7 +157,7 @@ def vote_up_question(question_id):
     if vote_up:
         data_manager.update_question_vote(question_id, 1)
         return redirect('/list')
-    return render_template('display_questions.html', id=question_id, question=question, answer=answers)
+    return render_template('Questions/display_questions.html', id=question_id, question=question, answer=answers)
 
 
 @app.route('/question/<int:question_id>/vote_down', methods=['GET', 'POST'])
@@ -164,7 +168,7 @@ def vote_down_question(question_id):
     if vote_down:
         data_manager.update_question_vote(question_id, -1)
         return redirect('/list')
-    return render_template('display_questions.html', id=question_id, question=question, answer=answers)
+    return render_template('Questions/display_questions.html', id=question_id, question=question, answer=answers)
 
 
 @app.route('/question/<int:question_id>/new-comment', methods=['GET', 'POST'])
@@ -176,20 +180,20 @@ def add_comment_to_question(question_id):
             data_manager.add_new_comment_question(data)
             data_manager.increase_comment_number(user_id)
             return redirect(url_for('list_answers', id=question_id))
-    return render_template('add_new_comment.html', id=question_id)
+    return render_template('Comments/add_new_comment.html', id=question_id)
 
 
 @app.route('/answer/<int:answer_id>/new-comment', methods=['GET', 'POST'])
 def add_comment_to_answer(answer_id):
+    question_id = data_manager.display_answer(answer_id)[0]['question_id']
     if 'username' in session:
-        question_id = data_manager.display_answer(answer_id)[0]['question_id']
         user_id = data_manager.get_user_id(escape(session['username']))[0]['id']
         if request.method == 'POST':
             data = [answer_id, request.form['comment'], str(datetime.datetime.now()), 0, user_id]
             data_manager.add_new_comment_answer(data)
             data_manager.increase_comment_number(user_id)
             return redirect(url_for('list_answers', id=question_id))
-    return render_template('add_new_comment_for_answers.html', answer_id=answer_id, question_id=question_id)
+    return render_template('Comments/add_new_comment_for_answers.html', answer_id=answer_id, question_id=question_id)
 
 
 @app.route('/search')
@@ -209,7 +213,7 @@ def search_questions():
         ids_we_need = [x['id'] for x in details]
     else:
         return redirect('/')
-    return render_template('searched_question.html', answer_ids=answer_ids, question_ids=question_ids, details=details,
+    return render_template('Main Page and Search/searched_question.html', answer_ids=answer_ids, question_ids=question_ids, details=details,
                            answers=answers, details_ids=ids_we_need)
 
 
@@ -220,7 +224,7 @@ def edit_answer(answer_id):
     if request.method == 'POST':
         data_manager.update_answer(answer_id, request.form['message'])
         return redirect(url_for('list_answers', id=answers[0]['question_id']))
-    return render_template('edit_answer.html', answer_id=answer_id, answer=answers, comments=comments)
+    return render_template('Edit/templates/Answers/edit_answer.html', answer_id=answer_id, answer=answers, comments=comments)
 
 
 @app.route('/comment/<int:comment_id>/edit', methods=['GET', 'POST'])
@@ -234,7 +238,7 @@ def edit_comment(comment_id):
         if not question_id:
             question_id = data_manager.get_question_id_by_answer_id(answer_id)[0]['question_id']
         return redirect(url_for('list_answers', id=question_id))
-    return render_template('edit_comment.html', comment_id=comment_id, comment=comment)
+    return render_template('Edit/templates/Comments/edit_comment.html', comment_id=comment_id, comment=comment)
 
 
 @app.route('/comments/<int:comment_id>/delete', methods=['GET', 'POST'])
@@ -258,7 +262,7 @@ def new_tag(question_id):
             data_manager.add_tag(tag)
         tag_id = [x['id'] for x in data_manager.get_tag() if x['name'] == request.form['tag']]
         data_manager.add_tag_question([question_id, tag_id[0]])
-    return render_template('new_tag.html', question_id=question_id, tags=tags)
+    return render_template('Tags/new_tag.html', question_id=question_id, tags=tags)
 
 
 @app.route('/question/<int:question_id>/tag/<int:tag_id>/delete')
@@ -281,7 +285,7 @@ def registration():
             return redirect('/')
         else:
             flash("E-mail taken")
-    return render_template('registration.html')
+    return render_template('Users/registration.html')
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -297,7 +301,7 @@ def login():
                 flash('Invalid credentials')
         else:
             flash('Invalid credentials')
-    return render_template('login.html')
+    return render_template('Users/login.html')
 
 
 @app.route('/logout')
@@ -310,7 +314,22 @@ def logout():
 def list_users():
     if 'username' in session:
         users = data_manager.get_users()
-        return render_template('list_users.html', users=users)
+        return render_template('Users/list_users.html', users=users)
+    else:
+        return redirect('/')
+
+
+@app.route('/user/<int:user_id>')
+def show_user(user_id):
+    if 'username' in session:
+        username = escape(session['username'])
+        data = data_manager.get_user(user_id)
+        questions = data_manager.get_questions_by_user_id(user_id)
+        answers = data_manager.get_answers_by_user_id(user_id)
+        comments = data_manager.get_comments_by_user_id(user_id)
+        all_answers = data_manager.get_answers()
+        return render_template('Users/user_page.html', user_id=user_id, data=data, questions=questions,
+                               answers=answers, comments=comments, username= username, all_answers=all_answers)
     else:
         return redirect('/')
 
