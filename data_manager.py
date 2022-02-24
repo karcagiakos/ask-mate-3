@@ -453,3 +453,11 @@ def decrease_comment_number(cursor, user_id):
     SET number_of_comments = number_of_comments - 1
     WHERE id = %(u_i)s"""
     cursor.execute(query, {'u_i': user_id})
+
+@database_common.connection_handler
+def change_state(cursor,answer_id):
+    query = """
+    UPDATE answer
+    SET state = CASE WHEN state = True THEN False else True END 
+    WHERE id = %(answer_id)s"""
+    cursor.execute(query, {'answer_id': answer_id})

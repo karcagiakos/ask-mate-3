@@ -14,7 +14,7 @@
             <button class="tag" type="button">{{ tags[i]['name']}} <a href="{{url_for('delete_tag', question_id=id, tag_id=tags[i]['id']) }}" alt="delete">X</a></button>
         {% endfor %}
         </p> <br>
-        <table width="60%">
+        <table>
         <tr>
         {% if comments|length < 1 %}
             <h2>There are no comments yet</h2>
@@ -70,7 +70,7 @@
 
 
         {% for j in range(answer|length) %}
-<table width="100%">
+<table >
         <tr>
             {% for key in answer[0].keys() %}
                 <th>{{ key.capitalize().replace('_',' ') }}</th>
@@ -81,15 +81,24 @@
         <th>Add new comment</th>
         </tr>
 
-
-            <tr>
+            {% set state = 'accepted' if answer[j]['state'] == True else 'declined' %}
+            <tr id="{{state}}">
         {% for key, value in answer[j].items() %}
                 {% if key == 'image' %}
 
     <td><a id="{{ answer['id'] }}" href="/static/images/{{ answer[j]['image'] }}"><img
             src="/static/images/{{ answer[j]['image'] }}" height="30"></a></td>
-                {% else %}
-
+                {% elif key == 'state' %}
+                    {% if question[0]['user_id'] == user_id %}
+                        {% if answer[j]['state'] == False %}
+                            <td><a href="{{url_for('change_state', answer_id=answer[j]['id'])}}">Accept</a></td>
+                            {% else %}
+                            <td><a href="{{ url_for('change_state', answer_id=answer[j]['id']) }}" type="submit" >Decline</a></td>
+                            {% endif %}
+                        {% else %}
+                        <td>{{ value }}</td>
+                    {% endif %}
+                    {% else %}
                 <td>{{ value }}</td>
 {% endif %}
                 {% endfor %}
@@ -111,7 +120,7 @@
 </table>
 
 
-           <table width="60%">
+           <table >
            {% if answer_ids[j] in comment_ids %}
             <tr>
             {% for key in answer_comments[0].keys() %}

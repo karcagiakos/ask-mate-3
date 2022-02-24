@@ -1,3 +1,54 @@
+#accepted {
+    background-color: #9C1A1C;
+}
+
+body {
+    background-color: #b0e0e6;
+    text-align: center;
+}
+
 table, th, td {
-  border: 1px solid black;
+    border-collapse: separate;
+    border: 1px solid #000000;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+.tag {
+    background-color: #008CBA;
+    color: #ffffff;
+
+}
+
+#but {
+    padding: 8px 10px;
+    border: none;
+    text-align: center;
+    margin: 4px 2px;
+    cursor: pointer;
+    background-color: #008CBA;
+    color: #ffffff;
+}
+
+.button {
+    transition-duration: 0.4s;
+    border: none;
+    color: #ffffff;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+
+.button1 {
+    background-color: #4caf50;
+}
+
+.button2 {
+    background-color: #008CBA;
 }
