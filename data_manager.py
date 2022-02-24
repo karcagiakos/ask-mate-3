@@ -454,6 +454,7 @@ def decrease_comment_number(cursor, user_id):
     WHERE id = %(u_i)s"""
     cursor.execute(query, {'u_i': user_id})
 
+
 @database_common.connection_handler
 def change_state(cursor,answer_id):
     query = """
@@ -461,3 +462,13 @@ def change_state(cursor,answer_id):
     SET state = CASE WHEN state = True THEN False else True END 
     WHERE id = %(answer_id)s"""
     cursor.execute(query, {'answer_id': answer_id})
+
+
+@database_common.connection_handler
+def change_reputation(cursor, num, user_id):
+    pass
+    query='''
+    UPDATE users
+    SET reputation = reputation + %(num)s
+    WHERE id = %(user_id)s'''
+    cursor.execute(query, {'num': num, 'user_id': user_id})

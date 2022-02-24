@@ -148,8 +148,11 @@ def delete_answer(answer_id):
 def vote_up_answer(answer_id):
     question_id = data_manager.display_answer(answer_id)[0]['question_id']
     vote_up = request.args.get('vote_up')
+    user_id = [
+        x['id'] for x in data_manager.get_users() if x['id'] == data_manager.display_answer(answer_id)[0]['user_id']]
     if vote_up:
         data_manager.update_answer_vote(answer_id, 1)
+        data_manager.change_reputation(10, user_id[0])
         return redirect(url_for('list_answers', id=question_id))
 
 
@@ -157,8 +160,11 @@ def vote_up_answer(answer_id):
 def vote_down_answer(answer_id):
     question_id = data_manager.display_answer(answer_id)[0]['question_id']
     vote_down = request.args.get('vote_down')
+    user_id = [
+        x['id'] for x in data_manager.get_users() if x['id'] == data_manager.display_answer(answer_id)[0]['user_id']]
     if vote_down:
         data_manager.update_answer_vote(answer_id, -1)
+        data_manager.change_reputation(-2, user_id[0])
         return redirect(url_for('list_answers', id=question_id))
 
 
@@ -169,6 +175,7 @@ def vote_up_question(question_id):
     question = data_manager.get_single_question(question_id)
     if vote_up:
         data_manager.update_question_vote(question_id, 1)
+        data_manager.change_reputation(5, question[0]['user_id'])
         return redirect('/list')
     return render_template('Questions/display_questions.html', id=question_id, question=question, answer=answers)
 
@@ -180,6 +187,7 @@ def vote_down_question(question_id):
     question = data_manager.get_single_question(question_id)
     if vote_down:
         data_manager.update_question_vote(question_id, -1)
+        data_manager.change_reputation(-2, question[0]['user_id'])
         return redirect('/list')
     return render_template('Questions/display_questions.html', id=question_id, question=question, answer=answers)
 
@@ -226,7 +234,8 @@ def search_questions():
         ids_we_need = [x['id'] for x in details]
     else:
         return redirect('/')
-    return render_template('Main Page and Search/searched_question.html', answer_ids=answer_ids, question_ids=question_ids, details=details,
+    return render_template('Main Page and Search/searched_question.html', answer_ids=answer_ids,
+                           question_ids=question_ids, details=details,
                            answers=answers, details_ids=ids_we_need)
 
 
@@ -357,6 +366,10 @@ def change_state(answer_id):
     question_id = data_manager.get_question_id_by_answer_id(answer_id)[0]['question_id']
     if 'username' in session:
         data_manager.change_state(answer_id)
+        if data_manager.display_answer(answer_id)[0]['state']:
+            data_manager.change_reputation(15, data_manager.display_answer(answer_id)[0]['user_id'])
+        else:
+            data_manager.change_reputation(-15, data_manager.display_answer(answer_id)[0]['user_id'])
         return redirect(url_for('list_answers', id=question_id))
     return redirect(url_for('list_answers', id=question_id))
 
