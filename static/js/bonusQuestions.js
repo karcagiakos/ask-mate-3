@@ -77,7 +77,9 @@ function getFilteredItems(items, filterValue) {
 }
 
 function toggleTheme() {
-    console.log("toggle theme")
+    let x = document.getElementsByTagName("BODY")[0];
+    x.style.backgroundColor = "black";
+    x.style.color = "white";
 }
 
 function increaseFont() {
