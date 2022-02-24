@@ -426,3 +426,30 @@ def get_comments_by_user_id(cursor, user_id):
          WHERE user_id = %(user_id)s"""
     cursor.execute(query, {'user_id': user_id})
     return cursor.fetchall()
+
+
+@database_common.connection_handler
+def decrease_question_number(cursor, user_id):
+    query = """
+    UPDATE users
+    SET number_of_questions = number_of_questions - 1
+    WHERE id = %(u_i)s"""
+    cursor.execute(query, {'u_i': user_id})
+
+
+@database_common.connection_handler
+def decrease_answer_number(cursor, user_id):
+    query = """
+    UPDATE users
+    SET number_of_answers = number_of_answers - 1
+    WHERE id = %(u_i)s"""
+    cursor.execute(query, {'u_i': user_id})
+
+
+@database_common.connection_handler
+def decrease_comment_number(cursor, user_id):
+    query = """
+    UPDATE users
+    SET number_of_comments = number_of_comments - 1
+    WHERE id = %(u_i)s"""
+    cursor.execute(query, {'u_i': user_id})

@@ -120,15 +120,25 @@ def edit_question(question_id):
 
 @app.route('/question/<question_id>/delete')
 def delete_question(question_id):
-    data_manager.delete_question(question_id)
-    return redirect('/list')
+    if 'username' in session:
+        user_id = data_manager.get_user_id(escape(session['username']))[0]['id']
+        data_manager.delete_question(question_id)
+        data_manager.decrease_question_number(user_id)
+        return redirect('/list')
+    else:
+        return redirect('/list')
 
 
 @app.route('/answer/<int:answer_id>/delete ', methods=['GET', 'POST'])
 def delete_answer(answer_id):
-    question_id = data_manager.display_answer(answer_id)[0]['question_id']
-    data_manager.delete_answer(answer_id)
-    return redirect(url_for('list_answers', id=question_id))
+    if 'username' in session:
+        user_id = data_manager.get_user_id(escape(session['username']))[0]['id']
+        question_id = data_manager.display_answer(answer_id)[0]['question_id']
+        data_manager.delete_answer(answer_id)
+        data_manager.decrease_answer_number(user_id)
+        return redirect(url_for('list_answers', id=question_id))
+    else:
+        return redirect('/list')
 
 
 @app.route('/answer/<int:answer_id>/vote_up', methods=['GET', 'POST'])
@@ -224,7 +234,7 @@ def edit_answer(answer_id):
     if request.method == 'POST':
         data_manager.update_answer(answer_id, request.form['message'])
         return redirect(url_for('list_answers', id=answers[0]['question_id']))
-    return render_template('Edit/templates/Answers/edit_answer.html', answer_id=answer_id, answer=answers, comments=comments)
+    return render_template('Answers/edit_answer.html', answer_id=answer_id, answer=answers, comments=comments)
 
 
 @app.route('/comment/<int:comment_id>/edit', methods=['GET', 'POST'])
@@ -238,18 +248,23 @@ def edit_comment(comment_id):
         if not question_id:
             question_id = data_manager.get_question_id_by_answer_id(answer_id)[0]['question_id']
         return redirect(url_for('list_answers', id=question_id))
-    return render_template('Edit/templates/Comments/edit_comment.html', comment_id=comment_id, comment=comment)
+    return render_template('Comments/edit_comment.html', comment_id=comment_id, comment=comment)
 
 
 @app.route('/comments/<int:comment_id>/delete', methods=['GET', 'POST'])
 def delete_comment(comment_id):
-    comment = data_manager.get_comment(comment_id)
-    question_id = comment[0]['question_id']
-    answer_id = comment[0]['answer_id']
-    data_manager.delete_comment(comment_id)
-    if not question_id:
-        question_id = data_manager.get_question_id_by_answer_id(answer_id)[0]['question_id']
-    return redirect(url_for('list_answers', id=question_id))
+    if 'username' in session:
+        user_id = data_manager.get_user_id(escape(session['username']))[0]['id']
+        comment = data_manager.get_comment(comment_id)
+        question_id = comment[0]['question_id']
+        answer_id = comment[0]['answer_id']
+        data_manager.delete_comment(comment_id)
+        data_manager.decrease_comment_number(user_id)
+        if not question_id:
+            question_id = data_manager.get_question_id_by_answer_id(answer_id)[0]['question_id']
+        return redirect(url_for('list_answers', id=question_id))
+    else:
+        return redirect('/list')
 
 
 @app.route('/question/<int:question_id>/new-tag', methods=['GET', 'POST'])
@@ -329,7 +344,7 @@ def show_user(user_id):
         comments = data_manager.get_comments_by_user_id(user_id)
         all_answers = data_manager.get_answers()
         return render_template('Users/user_page.html', user_id=user_id, data=data, questions=questions,
-                               answers=answers, comments=comments, username= username, all_answers=all_answers)
+                               answers=answers, comments=comments, username=username, all_answers=all_answers)
     else:
         return redirect('/')
 
