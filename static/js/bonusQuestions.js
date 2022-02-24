@@ -25,18 +25,51 @@ function getSortedItems(items, sortField, sortDirection) {
 
 // you receive an array of objects which you must filter by all it's keys to have a value matching "filterValue"
 function getFilteredItems(items, filterValue) {
-    console.log(items)
-    console.log(filterValue)
 
-    // === SAMPLE CODE ===
-    // if you have not changed the original html uncomment the code below to have an idea of the
-    // effect this function has on the table
-    //
-    for (let i=0; i<filterValue.length; i++) {
-        items.pop()
+    let list = [];
+
+    for (let i = 0; i < items.length; i++) {
+        for (const [key, value] of Object.entries(items[i])) {
+            if (key == "Title" || key == "Description") {
+                if (filterValue.charAt(0) == "!") {
+                    if (value.includes(filterValue.substring(1))) {
+                        break;
+                    } else if (filterValue.substring(1, 13) == "Description:") {
+                        if (key == "Description") {
+                            if (value.includes(filterValue.substring(13))) {
+                                continue;
+                            } else {
+                                list.push(items[i])
+                                break;
+                            }
+                        }
+                    } else {
+                        list.push(items[i])
+                        break;
+                    }
+                } else if (filterValue.substring(0, 12) == "Description:") {
+                    if (key == "Description") {
+                        if (value.includes(filterValue.substring(12))) {
+                            list.push(items[i])
+                            break;
+                        } else {
+                            continue;
+                        }
+                    }
+
+                } else {
+                    if (value.includes(filterValue)) {
+                        list.push(items[i]);
+                        break;
+                    } else {
+                        continue;
+                    }
+                }
+            }
+        }
     }
 
-    return items
+    return list
 }
 
 function toggleTheme() {
