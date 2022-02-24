@@ -14,6 +14,8 @@
             <button class="tag" type="button">{{ tags[i]['name']}} <a href="{{url_for('delete_tag', question_id=id, tag_id=tags[i]['id']) }}" alt="delete">X</a></button>
         {% endfor %}
         </p> <br>
+        <button  class="button button1" onclick="location.href='/tags'" type="button">
+         List of tags</button><br>
         <table>
         <tr>
         {% if comments|length < 1 %}
@@ -119,9 +121,9 @@
 
 </table>
 
-
+        {% if answer_ids[j] in comment_ids %}
            <table >
-           {% if answer_ids[j] in comment_ids %}
+
             <tr>
             {% for key in answer_comments[0].keys() %}
                 <th>{{ key.capitalize().replace('_',' ') }} </th>
@@ -130,9 +132,7 @@
              <th> Edit comment</th>
                 <th>Delete comment</th>
         </tr>
-         {% else %}
-            <h5>No comments yet</h5>
-           {% endif %}
+
      {% for dicts in answer_comments %}
          {% if answer[j]['id'] == dicts['answer_id']%}
      <tr>
@@ -155,6 +155,9 @@
 
 
      </table>
+                     {% else %}
+            <h5>No comments yet</h5>
+           {% endif %}
 {% endfor %}
 
 

@@ -17,7 +17,7 @@
 
 
  {% for j in range(details|length) %}
-<table width="100%">
+<table >
         <tr>
             {% for key in details[0].keys() %}
                 {% if key != 'image' %}
@@ -35,13 +35,7 @@
             {% endif %}
                 {% endfor %}
 
-                </tr>
-
-
-</table>
-
-
-     <table>
+                </tr
 
  {% if details_ids[j] in question_ids %}
             <tr>
