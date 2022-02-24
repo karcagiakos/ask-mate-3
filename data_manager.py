@@ -456,7 +456,7 @@ def decrease_comment_number(cursor, user_id):
 
 
 @database_common.connection_handler
-def change_state(cursor,answer_id):
+def change_state(cursor, answer_id):
     query = """
     UPDATE answer
     SET state = CASE WHEN state = True THEN False else True END 
@@ -467,8 +467,20 @@ def change_state(cursor,answer_id):
 @database_common.connection_handler
 def change_reputation(cursor, num, user_id):
     pass
-    query='''
+    query = '''
     UPDATE users
     SET reputation = reputation + %(num)s
     WHERE id = %(user_id)s'''
     cursor.execute(query, {'num': num, 'user_id': user_id})
+
+
+@database_common.connection_handler
+def get_tags_with_nums_of_question(cursor):
+    query = '''
+    SELECT tag.name AS tag, COUNT(question_tag.question_id) AS quantity
+    FROM tag
+    LEFT JOIN question_tag ON tag.id = question_tag.tag_id
+    LEFT JOIN question ON question_tag.question_id = question.id
+    GROUP BY tag.name'''
+    cursor.execute(query)
+    return cursor.fetchall()

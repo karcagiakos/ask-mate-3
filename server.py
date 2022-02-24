@@ -374,6 +374,12 @@ def change_state(answer_id):
     return redirect(url_for('list_answers', id=question_id))
 
 
+@app.route('/tags')
+def list_tags():
+    data = data_manager.get_tags_with_nums_of_question()
+    return render_template('Tags/list_tags.html', data=data)
+
+
 if __name__ == "__main__":
     app.run(
         host="192.168.1.100",
