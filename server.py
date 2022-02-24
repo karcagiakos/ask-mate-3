@@ -56,8 +56,10 @@ def list_questions():
 def list_answers(id):
     # tags = [x['name'] for x in data_manager.get_question_id_with_tag_name(id)]
     username = 'stranger'
+    user_id = None
     if 'username' in session:
         username = escape(session['username'])
+        user_id = data_manager.get_user_id(escape(session['username']))[0]['id']
     tags = data_manager.get_question_id_with_tag_name(id)
     answers = data_manager.list_answers(id)
     question = data_manager.get_single_question(id)
@@ -66,9 +68,10 @@ def list_answers(id):
     answer_ids = [x['id'] for x in answers]
     comment_ids = set([x['answer_id'] for x in answer_comments])
     data_manager.update_view_number(id)
-    return render_template('Questions/display_questions.html', comment_ids=comment_ids, question_id=id, id=id, question=question,
-                           answer=answers, comments=comments, tags=tags, answer_comments=answer_comments,
-                           answer_ids=answer_ids, username=username)
+    return render_template('Questions/display_questions.html', comment_ids=comment_ids, question_id=id,
+                           id=id, question=question, answer=answers,
+                           comments=comments, tags=tags, answer_comments=answer_comments,
+                           answer_ids=answer_ids, username=username, user_id=user_id)
 
 
 @app.route("/questions/<int:id>/new-answer", methods=['GET', 'POST'])
@@ -347,6 +350,15 @@ def show_user(user_id):
                                answers=answers, comments=comments, username=username, all_answers=all_answers)
     else:
         return redirect('/')
+
+
+@app.route('/answer/<int:answer_id>/state')
+def change_state(answer_id):
+    question_id = data_manager.get_question_id_by_answer_id(answer_id)[0]['question_id']
+    if 'username' in session:
+        data_manager.change_state(answer_id)
+        return redirect(url_for('list_answers', id=question_id))
+    return redirect(url_for('list_answers', id=question_id))
 
 
 if __name__ == "__main__":
