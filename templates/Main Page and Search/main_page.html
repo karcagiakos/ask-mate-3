@@ -37,15 +37,15 @@
 </form>
 
 
-     <button id="but" type=""><a href = "/list">Show all results</a></button>
-    <button id="but"><a href="/registration">Register</a></button>
+     <button id="but" <a href = "/list">Show all results</a></button>
+    <button id="reg"<a href="/registration">Register</a></button>
 {%  if username == 'stranger' %}
-    <button id="but" onclick="location.href='/login'" type="button">
+    <button id="log" onclick="location.href='/login'" type="button">
     Login</button><br>
 
     {% else %}
-    <button id="but" onclick="location.href='{{url_for('show_user', user_id=user_id)}}'" type="button">Profile</button>
-    <button id="but" onclick="location.href='/logout'" type="button">
+    <button id="prof" onclick="location.href='{{url_for('show_user', user_id=user_id)}}'" type="button">Profile</button>
+    <button id="log" onclick="location.href='/logout'" type="button">
     Logout</button><br>
 {% endif %}
 
@@ -86,7 +86,7 @@
     </button><br>
     <button  class="button button1" onclick="location.href='/tags'" type="button">
          List of tags</button><br>
-    <button id="but" onclick="location.href='/users'" type="button">
+    <button id="ls" onclick="location.href='/users'" type="button">
     Users list
     </button><br>
     {% endif %}
