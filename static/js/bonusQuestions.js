@@ -83,9 +83,18 @@ function toggleTheme() {
 }
 
 function increaseFont() {
-    console.log("increaseFont")
+    let x = document.getElementsByTagName("table")[0];
+    style = window.getComputedStyle(x, null).getPropertyValue('font-size');
+    currentSize = parseFloat(style)
+    if (currentSize < 25) {
+        x.style.fontSize = (currentSize + 1) + 'px';
+    }
 }
-
 function decreaseFont() {
-    console.log("decreaseFont")
+    let x = document.getElementsByTagName("table")[0];
+    style = window.getComputedStyle(x, null).getPropertyValue('font-size');
+    currentSize = parseFloat(style)
+    if (currentSize > 10) {
+        x.style.fontSize = (currentSize - 1) + 'px';
+    }
 }
