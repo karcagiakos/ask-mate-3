@@ -1,15 +1,16 @@
 #accepted {
-    background-color: #9C1A1C;
+    background-color: #b68d60;
 }
 
 body {
-    background-color: #b0e0e6;
+    background-color: #876445;
     text-align: center;
+    color: #F4DFBA;
 }
 
 table, th, td {
     border-collapse: separate;
-    border: 1px solid #000000;
+    border: 1px solid #ffffff;
     text-align: center;
     margin-left: auto;
     margin-right: auto;
@@ -28,14 +29,14 @@ table, th, td {
     text-align: center;
     margin: 4px 2px;
     cursor: pointer;
-    background-color: #008CBA;
-    color: #ffffff;
+    background-color: #EEC373;
+    color: black;
 }
 
 .button {
     transition-duration: 0.4s;
     border: none;
-    color: #ffffff;
+    color: black;
     padding: 15px 32px;
     text-align: center;
     text-decoration: none;
@@ -46,9 +47,84 @@ table, th, td {
 }
 
 .button1 {
-    background-color: #4caf50;
+    background-color: #CA965C;
+    color: black;
 }
 
 .button2 {
-    background-color: #008CBA;
+    background-color: #CA965C;
+    color: black;
+
+}
+
+#log {
+    position: fixed;
+    width: 80px;
+    top: 0;
+    right: 0;
+    padding: 8px 10px;
+    border: none;
+    text-align: center;
+    margin: 4px 2px;
+    cursor: pointer;
+    background-color: #603601;
+    color: #ffffff;
+}
+
+#reg {
+    position: fixed;
+    width: 80px;
+    top: 30px;
+    right: 0;
+    padding: 8px 10px;
+    border: none;
+    text-align: center;
+    margin: 4px 2px;
+    cursor: pointer;
+    background-color: #CA965C;
+    color: #ffffff;
+}
+
+#prof {
+    position: fixed;
+    width: 80px;
+    top: 0px;
+    right: 80px;
+    padding: 8px 10px;
+    border: none;
+    text-align: center;
+    margin: 4px 2px;
+    cursor: pointer;
+    background-color: #CA965C;
+    color: #ffffff;
+}
+
+#ls {
+    position: fixed;
+    width: 80px;
+    top: 30px;
+    right: 80px;
+    padding: 8px 10px;
+    border: none;
+    text-align: center;
+    margin: 4px 2px;
+    cursor: pointer;
+    background-color: #CA965C;
+    color: #ffffff;
+}
+
+#res {
+    border-collapse: collapse;
+    border: none;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+a:link{
+    color: black;
+}
+
+a:visited {
+    color: #F0ECE3;
 }

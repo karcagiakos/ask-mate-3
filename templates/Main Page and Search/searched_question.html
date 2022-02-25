@@ -8,7 +8,7 @@
 {% block body %}
     <h2>Search Result</h2>
      <section class="search">
-        <h3>Search for questions</h3>
+        <label>Search for questions</label>
     <form action="/search">
         <input name="q" type="text"><br>
         <button type="submit">Search</button>
@@ -18,30 +18,30 @@
 
  {% for j in range(details|length) %}
 <table >
-        <tr>
+        <tr >
             {% for key in details[0].keys() %}
                 {% if key != 'image' %}
-                <th>{{ key.capitalize().replace('_',' ') }}</th>
+                <th >{{ key.capitalize().replace('_',' ') }}</th>
                 {% endif %}
             {% endfor %}
         </tr>
 
 
-            <tr>
+            <tr >
         {% for key, value in details[j].items() %}
             {% if key != 'image' %}
 
-                <td>{{ value }}</td>
+                <td  id="res">{{ value }}</td>
             {% endif %}
                 {% endfor %}
 
-                </tr
+                </tr>
 
  {% if details_ids[j] in question_ids %}
-            <tr>
+            <tr >
             {% for key in answers[0].keys() %}
                 {% if key != 'image' %}
-                <th>{{ key.capitalize().replace('_',' ') }} </th>
+                <th >{{ key.capitalize().replace('_',' ') }} </th>
 {% endif %}
             {% endfor %}
             </tr>
@@ -50,10 +50,10 @@
            {% endif %}
      {% for dicts in answers %}
          {% if details[j]['id'] == dicts['question_id']%}
-     <tr>
+     <tr >
         {%  for key, value in dicts.items() %}
            {% if key != 'image' %}
-            <td>{{ value }}</td>
+            <td  >{{ value }}</td>
             {% endif %}
                 {% endfor %}
                 </tr>

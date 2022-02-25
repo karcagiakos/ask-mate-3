@@ -16,7 +16,9 @@
         </p> <br>
         <button  class="button button1" onclick="location.href='/tags'" type="button">
          List of tags</button><br>
-        <table>
+
+
+        <table id="res">
         <tr>
         {% if comments|length < 1 %}
             <h2>There are no comments yet</h2>
